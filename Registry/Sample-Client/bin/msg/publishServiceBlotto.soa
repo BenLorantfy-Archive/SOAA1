@@ -1,0 +1,5 @@
+DRC|PUB-SERVICE|Blotto|1180|
+SRV|CAR-LOAN|myCarLoanService|3|1|1||
+ARG|1|principal|double|mandatory|
+RSP|1|answer|int||
+MCH|192.168.254.11|5000|
