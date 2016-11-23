@@ -1,0 +1,8 @@
+DRC|PUB-SERVICE|Shcarpo|1183|
+SRV|CAR-LOAN|calcCarLoan|1|2|3||
+ARG|1|principal|double|mandatory|
+ARG|2|rate|double|mandatory|
+RSP|1|36MonthPayment|double||
+RSP|2|48MonthPayment|double||
+RSP|3|60MonthPayment|double||
+MCH|192.168.254.11|5000|

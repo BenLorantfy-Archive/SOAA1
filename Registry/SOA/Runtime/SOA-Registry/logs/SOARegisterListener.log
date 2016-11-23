@@ -1,0 +1,206 @@
+2016-11-22 16:52:40 SOASocketListener : Rolling Over LISTENER Log
+2016-11-22 16:52:40 SOASocketListener : Log File Rename Failed
+2016-11-22 16:52:40 -----------------------------------------------
+2016-11-22 16:52:40    SOA Register Online ... 2016-11-22 
+2016-11-22 16:52:40 -----------------------------------------------
+2016-11-22 16:52:40   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-22 16:54:53 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-22 16:54:53 startListen :         >> Spooling Incoming Message
+2016-11-22 16:54:53 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 56,48,124)
+2016-11-22 16:54:53 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-22 16:54:53 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-22 16:54:53 startListen :         >> Processing Data
+2016-11-22 16:54:53 processMessage :           >> Processing Incoming Message
+2016-11-22 16:54:53 processMessage :              >> Opening DBase ...
+2016-11-22 16:54:53 openDBase  :  >> Error while establishing DBase connection [The TCP/IP connection to the host  has failed. java.net.UnknownHostException: ]
+2016-11-22 16:54:53 processMessage :               >> Parsed out segment (DRC|UNREG-TEAM|Blotto|1180|)
+2016-11-22 16:54:53 parseSegment :             >> Begin Parsing
+2016-11-22 16:54:53 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-22 16:54:53 parseSegment :             	>> Found DRC Directive, parsed SOA Command <UNREG-TEAM>
+2016-11-22 16:54:53 processUnRegTeam :             >> Attempting to UNREGISTER team Blotto (ID : 1180)
+2016-11-22 16:54:53 parseSegment :             ** EXCEPTION ** java.lang.NullPointerException
+2016-11-22 16:54:53 processMessage :                 >> found EOM marker
+2016-11-22 16:54:53 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-22 16:54:53 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161122165453468.soa)
+2016-11-22 16:54:53 processMessage :                 >> Constructing OK Response
+2016-11-22 16:54:53 processMessage :                 >> Committing DBase transaction(s)
+2016-11-22 16:54:53 startListen :     >> **EXCEPTION** java.lang.NullPointerException
+2016-11-22 16:54:53 startListen :    >> Processing Exception - closing socket and reopening
+2016-11-22 17:08:41 SOASocketListener : Rolling Over LISTENER Log
+2016-11-22 17:08:41 SOASocketListener : Log File Rename Failed
+2016-11-22 17:08:41 -----------------------------------------------
+2016-11-22 17:08:41    SOA Register Online ... 2016-11-22 
+2016-11-22 17:08:41 -----------------------------------------------
+2016-11-22 17:08:41   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-22 17:09:07 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-22 17:09:07 startListen :         >> Spooling Incoming Message
+2016-11-22 17:09:07 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 56,48,124)
+2016-11-22 17:09:07 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-22 17:09:07 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-22 17:09:07 startListen :         >> Processing Data
+2016-11-22 17:09:07 processMessage :           >> Processing Incoming Message
+2016-11-22 17:09:07 processMessage :              >> Opening DBase ...
+2016-11-22 17:09:07 openDBase  :  >> Error while establishing DBase connection [The TCP/IP connection to the host  has failed. java.net.UnknownHostException: ]
+2016-11-22 17:09:07 processMessage :               >> Parsed out segment (DRC|UNREG-TEAM|Blotto|1180|)
+2016-11-22 17:09:07 parseSegment :             >> Begin Parsing
+2016-11-22 17:09:07 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-22 17:09:07 parseSegment :             	>> Found DRC Directive, parsed SOA Command <UNREG-TEAM>
+2016-11-22 17:09:07 processUnRegTeam :             >> Attempting to UNREGISTER team Blotto (ID : 1180)
+2016-11-22 17:09:07 parseSegment :             ** EXCEPTION ** java.lang.NullPointerException
+2016-11-22 17:09:07 processMessage :                 >> found EOM marker
+2016-11-22 17:09:07 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-22 17:09:07 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161122170907962.soa)
+2016-11-22 17:09:07 processMessage :                 >> Constructing OK Response
+2016-11-22 17:09:07 processMessage :                 >> Committing DBase transaction(s)
+2016-11-22 17:09:07 startListen :     >> **EXCEPTION** java.lang.NullPointerException
+2016-11-22 17:09:07 startListen :    >> Processing Exception - closing socket and reopening
+2016-11-22 17:18:01 startListen :       >> Rx/Tx Streams OPEN - (notDone=false)
+2016-11-22 17:18:01 startListen :         >> Spooling Incoming Message
+2016-11-22 17:18:01 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 56,48,124)
+2016-11-22 17:18:01 startListen :         >> Processing Data
+2016-11-22 17:18:01 processMessage :           >> Processing Incoming Message
+2016-11-22 17:18:01 processMessage :              >> Opening DBase ...
+2016-11-22 17:18:01 openDBase  :  >> Error while establishing DBase connection [The TCP/IP connection to the host  has failed. java.net.UnknownHostException: ]
+2016-11-22 17:18:01 processMessage :               >> Parsed out segment (DRC|UNREG-TEAM|Blotto|1180|)
+2016-11-22 17:18:01 parseSegment :             >> Begin Parsing
+2016-11-22 17:18:01 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-22 17:18:01 parseSegment :             	>> Found DRC Directive, parsed SOA Command <UNREG-TEAM>
+2016-11-22 17:18:01 processUnRegTeam :             >> Attempting to UNREGISTER team Blotto (ID : 1180)
+2016-11-22 17:18:01 parseSegment :             ** EXCEPTION ** java.lang.NullPointerException
+2016-11-22 17:18:01 processMessage :                 >> Message doesn't contain EOM marker
+2016-11-22 17:18:01 processMessage :               >> Incoming SOA Message FAILED to be Saved to Temporary File - moving to BAD location
+2016-11-22 17:18:01 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Bad\20161122171801909.soa)
+2016-11-22 17:18:01 processMessage :               >> Constructing NOT-OK Response
+2016-11-22 17:18:01 processMessage :                 >> (.. |-1|Message doesn't contain EOM marker| ..
+2016-11-22 17:18:01 processMessage :                 >> Rolling Back DBase transaction(s)
+2016-11-22 17:18:01 startListen :     >> **EXCEPTION** java.lang.NullPointerException
+2016-11-22 17:18:01 startListen :    >> Processing Exception - closing socket and reopening
+2016-11-22 17:31:30 SOASocketListener : Rolling Over LISTENER Log
+2016-11-22 17:31:30 SOASocketListener : Log File Rename Failed
+2016-11-22 17:31:30 -----------------------------------------------
+2016-11-22 17:31:30    SOA Register Online ... 2016-11-22 
+2016-11-22 17:31:30 -----------------------------------------------
+2016-11-22 17:31:30   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-22 17:31:58 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-22 17:31:58 startListen :         >> Spooling Incoming Message
+2016-11-22 17:31:58 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 56,48,124)
+2016-11-22 17:31:58 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-22 17:31:58 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-22 17:31:58 startListen :         >> Processing Data
+2016-11-22 17:31:58 processMessage :           >> Processing Incoming Message
+2016-11-22 17:31:58 processMessage :              >> Opening DBase ...
+2016-11-22 17:31:59 processMessage :               >> Parsed out segment (DRC|UNREG-TEAM|Blotto|1180|)
+2016-11-22 17:31:59 parseSegment :             >> Begin Parsing
+2016-11-22 17:31:59 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-22 17:31:59 parseSegment :             	>> Found DRC Directive, parsed SOA Command <UNREG-TEAM>
+2016-11-22 17:31:59 processUnRegTeam :             >> Attempting to UNREGISTER team Blotto (ID : 1180)
+2016-11-22 17:31:59 processUnRegTeam :                  >> Removed 0 row(s) from the Response table belonging to team 'Blotto' (ID : 1180)
+2016-11-22 17:31:59 processUnRegTeam :                  >> Removed 0 row(s) from the Argument table belonging to team 'Blotto' (ID : 1180)
+2016-11-22 17:31:59 processUnRegTeam :                  >> Removed 0 row(s) from the Service table belonging to team 'Blotto' (ID : 1180)
+2016-11-22 17:31:59 processUnRegTeam :                  >> Removed 1 row(s) from the Team table belonging to team 'Blotto' (ID : 1180)
+2016-11-22 17:31:59 processMessage :                 >> found EOM marker
+2016-11-22 17:31:59 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-22 17:31:59 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161122173159159.soa)
+2016-11-22 17:31:59 processMessage :                 >> Constructing OK Response
+2016-11-22 17:31:59 processMessage :                 >> Committing DBase transaction(s)
+2016-11-22 17:31:59 processMessage :           >> Processing Complete
+2016-11-22 17:31:59 startListen :           >> Sending response Message from Thortons-SOA
+2016-11-22 17:31:59 startListen :              >> Response is ... 
+------------------------------
+SOA|OK||||
+------------------------------
+2016-11-23 14:09:27 SOASocketListener : Rolling Over LISTENER Log
+2016-11-23 14:09:27 SOASocketListener : Log File Rename Failed
+2016-11-23 14:09:27 -----------------------------------------------
+2016-11-23 14:09:27    SOA Register Online ... 2016-11-23 
+2016-11-23 14:09:27 -----------------------------------------------
+2016-11-23 14:09:27   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-23 14:12:04 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-23 14:12:04 startListen :         >> Spooling Incoming Message
+2016-11-23 14:12:04 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 124,124,124)
+2016-11-23 14:12:04 startListen :           >> Appending Next MsgSegment : (73,78 ... 124,124)
+2016-11-23 14:12:04 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-23 14:12:04 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-23 14:12:04 startListen :         >> Processing Data
+2016-11-23 14:12:04 processMessage :           >> Processing Incoming Message
+2016-11-23 14:12:04 processMessage :              >> Opening DBase ...
+2016-11-23 14:12:05 openDBase  :  >> Error while establishing DBase connection [Cannot open database "SOARegistry" requested by the login. The login failed.]
+2016-11-23 14:12:05 processMessage :               >> Parsed out segment (DRC|REG-TEAM|||)
+2016-11-23 14:12:05 parseSegment :             >> Begin Parsing
+2016-11-23 14:12:05 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-23 14:12:05 parseSegment :             	>> Found DRC Directive, parsed SOA Command <REG-TEAM>
+2016-11-23 14:12:05 processMessage :               >> Parsed out segment (INF|Blotto|||)
+2016-11-23 14:12:05 parseSegment :             >> Begin Parsing
+2016-11-23 14:12:05 processRegTeam :             >> Parsing Segment <INF|>
+2016-11-23 14:12:05 parseSegment :             ** EXCEPTION ** java.lang.NullPointerException
+2016-11-23 14:12:05 processMessage :                 >> found EOM marker
+2016-11-23 14:12:05 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-23 14:12:05 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161123141205548.soa)
+2016-11-23 14:12:05 processMessage :                 >> Constructing OK Response
+2016-11-23 14:12:05 processMessage :                 >> Committing DBase transaction(s)
+2016-11-23 14:12:05 startListen :     >> **EXCEPTION** java.lang.NullPointerException
+2016-11-23 14:12:05 startListen :    >> Processing Exception - closing socket and reopening
+2016-11-23 14:19:35 SOASocketListener : Rolling Over LISTENER Log
+2016-11-23 14:19:35 SOASocketListener : Log File Rename Failed
+2016-11-23 14:19:35 -----------------------------------------------
+2016-11-23 14:19:35    SOA Register Online ... 2016-11-23 
+2016-11-23 14:19:35 -----------------------------------------------
+2016-11-23 14:19:35   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-23 14:20:11 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-23 14:20:11 startListen :         >> Spooling Incoming Message
+2016-11-23 14:20:11 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 124,124,124)
+2016-11-23 14:20:11 startListen :           >> Appending Next MsgSegment : (73,78 ... 124,124)
+2016-11-23 14:20:11 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-23 14:20:11 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-23 14:20:11 startListen :         >> Processing Data
+2016-11-23 14:20:11 processMessage :           >> Processing Incoming Message
+2016-11-23 14:20:11 processMessage :              >> Opening DBase ...
+2016-11-23 14:20:11 processMessage :               >> Parsed out segment (DRC|REG-TEAM|||)
+2016-11-23 14:20:11 parseSegment :             >> Begin Parsing
+2016-11-23 14:20:11 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-23 14:20:11 parseSegment :             	>> Found DRC Directive, parsed SOA Command <REG-TEAM>
+2016-11-23 14:20:11 processMessage :               >> Parsed out segment (INF|Blotto|||)
+2016-11-23 14:20:11 parseSegment :             >> Begin Parsing
+2016-11-23 14:20:11 processRegTeam :             >> Parsing Segment <INF|>
+2016-11-23 14:20:11 processRegTeam :                >> No team found with name <Blotto>
+2016-11-23 14:20:11 processRegTeam :                >> Inserted team <Blotto> into DBase
+2016-11-23 14:20:11 processRegTeam :                >> Team <Blotto> registered successfully
+2016-11-23 14:20:11 processMessage :                 >> found EOM marker
+2016-11-23 14:20:11 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-23 14:20:11 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161123142011453.soa)
+2016-11-23 14:20:11 processMessage :                 >> Constructing OK Response
+2016-11-23 14:20:11 processMessage :                 >> Committing DBase transaction(s)
+2016-11-23 14:20:11 processMessage :           >> Processing Complete
+2016-11-23 14:20:11 startListen :           >> Sending response Message from Thortons-SOA
+2016-11-23 14:20:11 startListen :              >> Response is ... 
+------------------------------
+SOA|OK|1186|||
+------------------------------
+2016-11-23 14:20:34 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-23 14:20:34 startListen :         >> Spooling Incoming Message
+2016-11-23 14:20:34 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 124,124,124)
+2016-11-23 14:20:34 startListen :           >> Appending Next MsgSegment : (73,78 ... 124,124)
+2016-11-23 14:20:34 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-23 14:20:34 startListen :           >> Appending Last MsgSegment : (28)
+2016-11-23 14:20:34 startListen :         >> Processing Data
+2016-11-23 14:20:34 processMessage :           >> Processing Incoming Message
+2016-11-23 14:20:34 processMessage :              >> Opening DBase ...
+2016-11-23 14:20:34 processMessage :               >> Parsed out segment (DRC|REG-TEAM|||)
+2016-11-23 14:20:34 parseSegment :             >> Begin Parsing
+2016-11-23 14:20:34 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-23 14:20:34 parseSegment :             	>> Found DRC Directive, parsed SOA Command <REG-TEAM>
+2016-11-23 14:20:34 processMessage :               >> Parsed out segment (INF|Blotto|||)
+2016-11-23 14:20:34 parseSegment :             >> Begin Parsing
+2016-11-23 14:20:34 processRegTeam :             >> Parsing Segment <INF|>
+2016-11-23 14:20:34 processRegTeam :                >> Team <Blotto> already registered
+2016-11-23 14:20:34 processMessage :                 >> found EOM marker
+2016-11-23 14:20:34 processMessage :               >> Incoming SOA Message Saved to Temporary File
+2016-11-23 14:20:34 processMessage :                 >> File Renamed to (C:\SOA\Runtime\SOA-Registry\Incoming\Good\20161123142034635.soa)
+2016-11-23 14:20:34 processMessage :                 >> Constructing OK Response
+2016-11-23 14:20:34 processMessage :                 >> Committing DBase transaction(s)
+2016-11-23 14:20:34 processMessage :           >> Processing Complete
+2016-11-23 14:20:34 startListen :           >> Sending response Message from Thortons-SOA
+2016-11-23 14:20:34 startListen :              >> Response is ... 
+------------------------------
+SOA|OK|1186|||
+------------------------------
