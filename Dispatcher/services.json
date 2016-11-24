@@ -5,7 +5,9 @@
 			,"serviceName":"Car Loan Calculator"
 			,"securityLevel":1
 			,"description":"Calculates car loan based on a principle amount and an interest rate"
-			,"port":1337
+			,"path":"/calculation"
+            ,"port":1337
+            ,"start":"java -jar ../Services/CarLoanCalculator/dist/CarLoanCalculator.jar"
 			,"arguments":[
 				{
 					  "name":"Principal Amount"

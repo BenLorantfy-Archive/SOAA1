@@ -21,24 +21,35 @@ import com.google.gson.Gson;
  * @author Ben
  */
 public class CarLoanCalculator {
-
+    private static HttpServer server = null;
+    private static int port = 1337;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        HttpServer server = null;
+        
+        
         try{
             System.out.println("Creating Http Server...");
-            server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/", new Handler());
             server.setExecutor(null); // creates a default executor
             server.start();
-            System.out.println("Created Http Server on port 8000...");
+            System.out.println("Created Http Server on port " + port + "...");
         }catch(Exception e){
             System.out.println("Failed to create HTTP Server: " + e.getMessage());
         }
         
+        // Attach event on application quit
+        Runtime.getRuntime().addShutdownHook(new Thread() {
 
+            @Override
+            public void run() {
+                System.out.println("Stopping http server...");
+                server.stop(0);
+            }
+
+        });
     }
     
     public static boolean match(String path, HttpExchange t){

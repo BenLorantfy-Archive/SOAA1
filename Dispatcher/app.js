@@ -1,10 +1,22 @@
 // [ Dependencies ]
 var net = require("net");
 var dns = require("dns");
+var exec = require('child_process').exec;
+var request = require('request');
 var services = require("./services.json");
 
 // [ Custom log function ]
-var log = console.log;
+var log = function(msg,indent){
+    if(!indent) var indent = 0;
+    
+    var indents = "";
+    for(var i = 0; i < indent; i++){
+        indents += "    ";
+    }
+    indents += ">>> ";
+    
+    console.log(indents + msg);
+}
 var clients = [];
 
 // The following ASCII values are taken from the SOA Messaging Protocol Spec
@@ -14,6 +26,28 @@ var EOM = 28;
 
 // These ASCII values are whitespace according to https://en.wikipedia.org/wiki/Whitespace_character
 var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8232,8233,8239,8287,12288 /* following values are not WSpace=Y according to unicode but similar -> */, 6158,8203,8204,8205,8288,65279];
+
+
+// [ Start all the services ]
+(function startup(){
+    log("Starting all the services...");
+    for(var i = 0; i < services.services.length; i++){
+        var service = services.services[i];
+        if(service.start){
+            log("Starting " + service.serviceName + " service...",1)
+            exec(service.start, function(error, stdout, stderr){
+              if (error) {
+                console.error("exec error: " + error);
+                return;
+              }
+              console.log("stdout: " + stdout);
+              console.log("stderr: " + stderr);
+            });        
+        }
+    }    
+    log("Done starting services");
+})();
+
 
 // [ Consumes a message and performs required actions ]
 function consumeMessage(message){
@@ -38,7 +72,7 @@ function consumeMessage(message){
 		return;
 	}
 	
-	// console.log(segments);
+//	 console.log(segments);
 	
 	for(var i = 0; i < segments.length; i++){
 		var parts = segments[i].split("|");
@@ -89,18 +123,24 @@ function executeService(segments){
 	}
 	
 	// [ Execute service ]
+    var url = 'http://localhost:' + service.port + service.path;
 	log("Executing " + service.serviceName + "...");
+    log("Making REST HTTP request to " + url + "...");
+    
+    request.get(url, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(body) 
+      }
+    })
 }
 
-// [ Looks up the local private IP ]
-log("Looking up IP address...");
-dns.lookup(require('os').hostname(), function (err, ip, fam) {
-  
+// [ Creates the server ]
+function createServer(err, ip, fam) {
+    log("Determined local IP address:" + ip,1)
 	// [ Create the TCP server ]
 	log("Creating Server...");
 	var server = net.createServer(function (socket){
-
-	socket.setEncoding('utf8');
+	   socket.setEncoding('utf8');
 		
 		var client = {
 			 socket:socket
@@ -114,9 +154,10 @@ dns.lookup(require('os').hostname(), function (err, ip, fam) {
 		// [ Listen for messages ]
 		(function listenForMessages(client){
 			client.socket.on("data",function(data){
+                
 				// Add any recieved data to buffer
 				client.buffer += data;
-												
+                										
 				// [ Checks buffer for any new messages ]
 				while(client.buffer.indexOf(String.fromCharCode(EOM)) >= 0){
 					// [ Adds charachters to message until EOM is reached]
@@ -169,7 +210,7 @@ dns.lookup(require('os').hostname(), function (err, ip, fam) {
 					message = message.replace(String.fromCharCode(EOM),"");
 					message = message.replace(String.fromCharCode(BOM),"");
 					
-					log("Recieved Message:" + message);
+					log("Recieved Message");
 					client.messages.push(message);
 					
 				}
@@ -192,11 +233,16 @@ dns.lookup(require('os').hostname(), function (err, ip, fam) {
 		throw err;
 	});
 
+    log("Created server");
 	// [ Listen for Connections ]
 	server.listen(2016, ip, function(){
 		var info = server.address();
-		log('Server listening on', info.address + ":" + info.port + "...");
+		log('Server listening on ' + info.address + ":" + info.port + "...");
 	});
-});
+}
+
+// [ Look up the local private IP and then start the server ]
+log("Looking up IP address...");
+dns.lookup(require('os').hostname(), createServer);
 
 

@@ -1,0 +1,13 @@
+{
+  "name": "soa-a1",
+  "repository": "https://github.com/BenLorantfy/SOAA1",
+  "description": "SOAA1",
+  "version": "1.2.3",
+  "dependencies": {
+    "request": "^2.79.0"
+  },
+  "scripts": {
+    "start": "node app"
+  },
+  "main": "app.js"
+}

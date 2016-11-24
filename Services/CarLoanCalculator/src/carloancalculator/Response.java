@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 
 /**
  *
- * @author Dan
+ * @author Ben
  */
 abstract public class Response {
     // http://stackoverflow.com/a/5889590/3006989
