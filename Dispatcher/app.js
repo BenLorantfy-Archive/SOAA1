@@ -49,7 +49,47 @@ function consumeMessage(message){
 }
 
 function executeService(segments){
+	if(segments.length > 2){
+		log("Not enough segments");
+		return;	
+	}
 	
+	// [ Make sure SRV segment exists ]
+	var srv = segments[1].split("|");
+	if(srv[0] != "SRV"){
+		log("Second segment didn't begin with SRV");
+		return;
+	}
+	
+	// [ Get service name ]
+	var serviceName = null;
+	if(typeof srv[1] !== "string" ){
+		log("Service name invalid");
+		return;
+	}
+	if(srv[1].trim() == ""){
+		log("Service name empty");
+		return;
+	}
+	serviceName = srv[1].trim();
+	
+	// [ Look for service info ]
+	var service = null;
+	for(var i = 0; i < services.services.length; i++){
+		if(services.services[i].serviceName == serviceName){
+			service = services.services[i];
+			break;
+		}
+	}
+	
+	// [ Make sure service was found ]
+	if(service == null){
+		log("Couldn't find service with provided service name");
+		return;
+	}
+	
+	// [ Execute service ]
+	log("Executing " + service.serviceName + "...");
 }
 
 // [ Looks up the local private IP ]

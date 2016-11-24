@@ -1,0 +1,23 @@
+{
+	"services":[
+		{
+			 "tagName":"CAR-LOAN"
+			,"serviceName":"Car Loan Calculator"
+			,"securityLevel":1
+			,"description":"Calculates car loan based on a principle amount and an interest rate"
+			,"port":1337
+			,"arguments":[
+				{
+					  "name":"Principal Amount"
+					 ,"mandatory":true
+					 ,"type":"float"
+				},
+				{
+					  "name":"Interest Rate"
+					 ,"mandatory":true
+					 ,"type":"float"
+				}
+			]
+		}
+	]
+}
