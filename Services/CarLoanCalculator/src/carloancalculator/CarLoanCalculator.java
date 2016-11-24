@@ -1,14 +1,10 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package carloancalculator;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -46,7 +42,9 @@ public class CarLoanCalculator {
             @Override
             public void run() {
                 System.out.println("Stopping http server...");
-                server.stop(0);
+                if(server != null){
+                     server.stop(0);
+                }
             }
 
         });
@@ -68,14 +66,56 @@ public class CarLoanCalculator {
         @Override
         public void handle(HttpExchange t) {
             Response response = null;
+            String body = "";
             
+            // [ Try to Read the HTTP request body ]
+            try{
+                // http://stackoverflow.com/a/10910032/3006989
+                InputStreamReader isr =  new InputStreamReader(t.getRequestBody(),"utf-8");
+                BufferedReader br = new BufferedReader(isr);
+
+                int b;
+                StringBuilder buf = new StringBuilder(512);
+                while ((b = br.read()) != -1) {
+                    buf.append((char) b);
+                }
+
+                br.close();
+                isr.close();   
+                
+                body = buf.toString();
+            }catch(Exception e){
+                // do nothing and leave body blank
+            }
+   
+    
             try{
                 // System.out.println(t.getRequestMethod() + " " + t.getRequestURI().getPath());
             
-                if(match("GET /calculation",t)){   
-                    response = new ResultResponse(100 * Math.random());
+                if(match("POST /calculations",t)){  
+                    // [ Try to parse json ]
+                    Request request = null;
+                    try{
+                        request = new Gson().fromJson(body, Request.class);          
+                    }catch(Exception e){
+                        new ErrorResponse("Malformed JSON",e.getMessage()).send(t);
+                        return;
+                    }       
+                    
+                    if(request == null){
+                        new ErrorResponse("Malformed JSON","Malformed JSON").send(t);
+                        return;                     
+                    }
+                    
+                    // [ Do calculation ]
+                    double r = request.InterestRate / 1200;
+                    double P = request.PrincipalAmount;
+                    double payment36 = ( r + ( r / ( Math.pow(1 + r,36) - 1 ) )) * P;
+                    double payment48 = ( r + ( r / ( Math.pow(1 + r,48) - 1 ) )) * P;
+                    double payment60 = ( r + ( r / ( Math.pow(1 + r,60) - 1 ) )) * P;
+                    response = new ResultResponse(payment36,payment48,payment60);
                 }else{
-                    response = new ErrorResponse("404","404");                  
+                    response = new ErrorResponse("404","Page Not Found");                  
                 }               
             }catch(Exception e){
                 response = new ErrorResponse("Exception",e.getMessage());           

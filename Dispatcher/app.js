@@ -50,7 +50,7 @@ var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8
 
 
 // [ Consumes a message and performs required actions ]
-function consumeMessage(message){
+function consumeMessage(client,message){
 	var segments = message.split(String.fromCharCode(EOS));
 	
 	// [ Remove all the empty segments ]
@@ -77,32 +77,36 @@ function consumeMessage(message){
 	for(var i = 0; i < segments.length; i++){
 		var parts = segments[i].split("|");
 		if(parts[0] == "DRC" && parts[1] == "EXEC-SERVICE"){
-			executeService(segments)
+            log("Executing service...");
+			executeService(client,segments)
 		}
 	}
 }
 
-function executeService(segments){
-	if(segments.length > 2){
-		log("Not enough segments");
+function executeService(client,segments){
+	
+    
+    // [ Make sure SRV segment exists ]
+    if(!segments[1]){
+		log("Missing SRV segment",1);
 		return;	
 	}
 	
 	// [ Make sure SRV segment exists ]
 	var srv = segments[1].split("|");
 	if(srv[0] != "SRV"){
-		log("Second segment didn't begin with SRV");
+		log("Second segment didn't begin with SRV",1);
 		return;
 	}
 	
 	// [ Get service name ]
 	var serviceName = null;
 	if(typeof srv[1] !== "string" ){
-		log("Service name invalid");
+		log("Service name invalid",1);
 		return;
 	}
 	if(srv[1].trim() == ""){
-		log("Service name empty");
+		log("Service name empty",1);
 		return;
 	}
 	serviceName = srv[1].trim();
@@ -118,18 +122,51 @@ function executeService(segments){
 	
 	// [ Make sure service was found ]
 	if(service == null){
-		log("Couldn't find service with provided service name");
+		log("Couldn't find service with provided service name",1);
 		return;
 	}
+    
+    // [ Add all the arguments ]
+    var arguments = {};
+    for(var i = 0; i < service.arguments.length; i++){
+        var argument = service.arguments[i];
+        var name = service.arguments[i].name;
+        var value = null;
+        
+        for(var j = 0; j < segments.length; j++){
+            var parts = segments[j].split("|");
+            if(parts[0] == "ARG" && parts[2] == name){
+                value = parts[5];
+            }
+        }
+        
+        // [ Error if value wasn't found and argument is required ]
+        if(!value && value !== 0 && value !== "0" && value !== "" && argument.mandatory){
+            log("Missing required parameter: " + name,1);
+            return;
+        }
+        
+        // [ Set the arguement ]
+        arguments[name] = value;
+    }
 	
 	// [ Execute service ]
     var url = 'http://localhost:' + service.port + service.path;
 	log("Executing " + service.serviceName + "...");
-    log("Making REST HTTP request to " + url + "...");
+    log("Making REST HTTP request to POST " + url + "...",1);
     
-    request.get(url, function (error, response, body) {
+    // [ Make service request ]
+    var options = {
+         uri:url
+        ,method:"POST"
+        ,json:arguments
+    }
+    
+    request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         console.log(body) 
+      }else{
+          log("Error: Request to POST " + url + " failed",1)
       }
     })
 }
@@ -216,7 +253,7 @@ function createServer(err, ip, fam) {
 				}
 				
 				for(var i = client.messages.length - 1; i >= 0; i--){
-					consumeMessage(client.messages[i]);
+					consumeMessage(client,client.messages[i]);
 					
 					// [ Remove message so it's not consumed twice ]
 					client.messages.splice(i, 1);
