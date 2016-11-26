@@ -1,0 +1,37 @@
+2016-11-24 18:32:21 SOASocketListener : Rolling Over LISTENER Log
+2016-11-24 18:32:21 SOASocketListener : Log File Rename Failed
+2016-11-24 18:32:21 -----------------------------------------------
+2016-11-24 18:32:21    SOA Register Online ... 2016-11-24 
+2016-11-24 18:32:21 -----------------------------------------------
+2016-11-24 18:32:21   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2016-11-24 18:33:08 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2016-11-24 18:33:08 startListen :         >> Spooling Incoming Message
+2016-11-24 18:33:08 startListen :           >> Appending MsgSegment : (,D,R,C ... |,|,|)
+2016-11-24 18:33:08 startListen :           >> Appending Next MsgSegment : (S,R ... |,|)
+2016-11-24 18:33:08 startListen :           >> Appending Next MsgSegment : (A,R ... 0,|)
+2016-11-24 18:33:08 startListen :           >> Appending Next MsgSegment : (A,R ... 0,|)
+2016-11-24 18:33:08 startListen :           >> Appending Last MsgSegment : length =1
+2016-11-24 18:33:08 startListen :           >> Appending Last MsgSegment : ()
+2016-11-24 18:33:08 startListen :         >> Processing Data
+2016-11-24 18:33:08 processMessage :           >> Processing Incoming Message
+2016-11-24 18:33:08 processMessage :              >> Opening DBase ...
+2016-11-24 18:33:08 openDBase  :  >> Error while loading JDBC Driver [com.mysql.jdbc.Driver]
+2016-11-24 18:33:08 processMessage :               >> Parsed out segment (DRC|EXEC-SERVICE|||)
+2016-11-24 18:33:08 parseSegment :             >> Begin Parsing
+2016-11-24 18:33:08 parseSegment :             >> Parsing Segment <DRC|>
+2016-11-24 18:33:08 parseSegment :             	>> Found DRC Directive, parsed SOA Command <EXEC-SERVICE>
+2016-11-24 18:33:08 parseSegment :                 >> EXEC-SERVICE command not processed by SOA-Registry.
+2016-11-24 18:33:08 processMessage :               >> Parsed out segment (SRV|Car Loan Calculator|||)
+2016-11-24 18:33:08 parseSegment :             >> Begin Parsing
+2016-11-24 18:33:08 processMessage :               >> Parsed out segment (ARG|0|PrincipalAmount|float||500|)
+2016-11-24 18:33:08 parseSegment :             >> Begin Parsing
+2016-11-24 18:33:08 processMessage :               >> Parsed out segment (ARG|1|InterestRate|float||20|)
+2016-11-24 18:33:08 parseSegment :             >> Begin Parsing
+2016-11-24 18:33:08 processMessage :                 >> found EOM marker
+2016-11-24 18:33:08 processMessage :               >> Incoming SOA Message FAILED to be Saved to Temporary File - moving to BAD location
+2016-11-24 18:33:08 processMessage :                 >> File Renamed to (/Applications/MAMP/htdocs/SOAA1/ServiceRegistry/incoming/Bad/20161124183308456.soa)
+2016-11-24 18:33:08 processMessage :               >> Constructing NOT-OK Response
+2016-11-24 18:33:08 processMessage :                 >> (.. |-2|EXEC-SERVICE command not processed by SOA-Registry.| ..
+2016-11-24 18:33:08 processMessage :                 >> Rolling Back DBase transaction(s)
+2016-11-24 18:33:08 startListen :     >> **EXCEPTION** java.lang.NullPointerException
+2016-11-24 18:33:08 startListen :    >> Processing Exception - closing socket and reopening

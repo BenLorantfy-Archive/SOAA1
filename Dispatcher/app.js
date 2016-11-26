@@ -162,13 +162,33 @@ function executeService(client,segments){
         ,json:arguments
     }
     
-    request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body) 
-      }else{
-          log("Error: Request to POST " + url + " failed",1)
-      }
-    })
+    var response = "";
+    request(options, function (error, res, data) {
+    	// [ Make sure request didn't fail ]
+    	if(error || res.statusCode != 200 || !data){
+			log("Error: Request to POST " + url + " failed",1)
+    		return;
+    	}
+
+    	// [ Start response ]
+    	response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
+
+    	// [ Loop through each return value ]
+    	for(var i = 0; i < service.returns.length; i++){
+    		var ret = service.returns[i];
+    		var value = data[service.returns[i].name];
+    		response += "RSP|" + i + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
+    	}
+
+    	response += String.fromCharCode(EOM);
+    	response += "\n"; // This is only suggested in the spec, but the sample client doesn't work without it
+
+    	// [ Send the response ]
+    	log("Sending response to client...", 1);
+    	client.socket.write(response,function(){
+    		log("Response sent", 1);
+    	});
+    });
 }
 
 // [ Creates the server ]

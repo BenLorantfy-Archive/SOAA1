@@ -20,6 +20,20 @@
 					 ,"type":"float"
 				}
 			]
+			,"returns":[
+				{
+					 "name":"MonthlyPaymentFor36MonthLoan"
+					,"type":"float"
+				},
+				{
+					 "name":"MonthlyPaymentFor48MonthLoan"
+					,"type":"float"
+				},
+				{
+					 "name":"MonthlyPaymentFor60MonthLoan"
+					,"type":"float"
+				}
+			]
 		}
 	]
 }
