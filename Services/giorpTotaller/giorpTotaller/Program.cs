@@ -78,12 +78,16 @@ namespace giorpTotaller
                 {
                     calcError = CalculateTotalPurchase(purchaseAmount, province, out subTotal, out Gst, out Pst, out Hst, out grandTotal);
                 }
-
-                context.Response.AddHeader("SubTotal", subTotal.ToString());
-                context.Response.AddHeader("Gst", Gst.ToString());
-                context.Response.AddHeader("Pst", Pst.ToString());
-                context.Response.AddHeader("Hst", Hst.ToString());
-                context.Response.AddHeader("GrandTotal", grandTotal.ToString());
+                
+                Dictionary<string, string> responseValues = new Dictionary<string, string>();
+                responseValues.Add("SubTotal", subTotal.ToString("N2"));
+                responseValues.Add("Gst", Gst.ToString("N2"));
+                responseValues.Add("Pst", Pst.ToString("N2"));
+                responseValues.Add("Hst", Hst.ToString("N2"));
+                responseValues.Add("GrandTotal", grandTotal.ToString("N2"));
+                var jsonResponseObj = Newtonsoft.Json.JsonConvert.SerializeObject(responseValues);
+                var jsonByteArray = Encoding.GetEncoding("UTF-8").GetBytes(jsonResponseObj.ToCharArray());
+                context.Response.OutputStream.Write(jsonByteArray, 0, jsonByteArray.Length);
             }
 
             private bool CalculateTotalPurchase(float purchaseAmount, string province, out float subTotal, out float Gst, out float Pst, out float Hst, out float grandTotal)
