@@ -162,26 +162,30 @@ function executeService(client,segments){
         ,json:arguments
     }
     
-    var response = "";
+    var response = null;
     request(options, function (error, res, data) {
     	// [ Make sure request didn't fail ]
     	if(error || res.statusCode != 200 || !data){
-			log("Error: Request to POST " + url + " failed",1)
-    		return;
+			log("Error: Request to POST " + url + " failed",1);
+			
+			response = String.fromCharCode(BOM) + "PUB|NOT-OK|||42|Service Failed" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
     	}
 
-    	// [ Start response ]
-    	response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
+    	if(!response){
 
-    	// [ Loop through each return value ]
-    	for(var i = 0; i < service.returns.length; i++){
-    		var ret = service.returns[i];
-    		var value = data[service.returns[i].name];
-    		response += "RSP|" + i + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
+	    	// [ Start response ]
+	    	response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
+
+	    	// [ Loop through each return value ]
+	    	for(var i = 0; i < service.returns.length; i++){
+	    		var ret = service.returns[i];
+	    		var value = data[service.returns[i].name];
+	    		response += "RSP|" + i + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
+	    	}
+
+	    	response += String.fromCharCode(EOM);
+	    	response += "\n"; // This is only suggested in the spec, but the sample client doesn't work without it
     	}
-
-    	response += String.fromCharCode(EOM);
-    	response += "\n"; // This is only suggested in the spec, but the sample client doesn't work without it
 
     	// [ Send the response ]
     	log("Sending response to client...", 1);
