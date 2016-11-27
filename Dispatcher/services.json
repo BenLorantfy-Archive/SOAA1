@@ -34,6 +34,49 @@
 					,"type":"float"
 				}
 			]
+		},
+		{
+			 "tagName":"GIORP-TOTAL"
+			,"serviceName":"giorpTotaller"
+			,"securityLevel":1
+			,"description":"Calculates and returns the purchase sub-total, various tax additions and grand total for the purchase given the province/territory"
+			,"path":"?"
+            ,"port":1234
+            ,"start":"?"
+			,"arguments":[
+				{
+					  "name":"PurchaseAmount"
+					 ,"mandatory":true
+					 ,"type":"float"
+				},
+				{
+					  "name":"Province"
+					 ,"mandatory":true
+					 ,"type":"string"
+				}
+			]
+			,"returns":[
+				{
+					 "name":"SubTotal"
+					,"type":"float"
+				},
+				{
+					 "name":"Gst"
+					,"type":"float"
+				},
+				{
+					 "name":"Pst"
+					,"type":"float"
+				},
+				{
+					 "name":"Hst"
+					,"type":"float"
+				},
+				{
+					 "name":"GrandTotal"
+					,"type":"float"
+				}
+			]
 		}
 	]
 }

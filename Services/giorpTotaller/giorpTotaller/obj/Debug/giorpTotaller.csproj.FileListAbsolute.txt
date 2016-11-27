@@ -1,0 +1,9 @@
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\giorpTotaller.exe.config
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\giorpTotaller.exe
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\giorpTotaller.pdb
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\Newtonsoft.Json.dll
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\Newtonsoft.Json.xml
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.csprojResolveAssemblyReference.cache
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.exe
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.pdb
+c:\users\amsha\documents\visual studio 2015\Projects\giorpTotaller\giorpTotaller\bin\Debug\Grapevine.dll
