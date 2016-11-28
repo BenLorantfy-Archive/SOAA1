@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services>
+  <service name="Airport Information Webservice" host="www.webservicex.net" serviceUrl="/airport.asmx">
+    <methods>
+      <method name="GetAirportInformationByCountry" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="country" type="string" help="Full country name" rule="[a-zA-Z]+"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByAirportCode" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="airportCode" type="string" help="Code of the airport" rule="[a-zA-Z]{3}"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByCityOrAirportName" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="cityOrAirportName" type="string" help="Name of the city and/or airport. Most of the time contains both like 'Toronto Pearson'" rule="[a-zA-Z]+"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByISOCountryCode" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="CountryAbbrviation" type="string" help="Country 2 letter ISO Alpha-2 code. For example 'CA', 'US', 'RU'" rule="[a-zA-Z]{2}"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+</services>
