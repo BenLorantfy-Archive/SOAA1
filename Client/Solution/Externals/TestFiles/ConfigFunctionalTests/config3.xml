@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services>
+  <service name="GeoIPService" host="www.webservicex.net" serviceUrl="/geoipservice.asmx">
+    <methods>
+      <method name="GetGeoIPContext" xmlns="http://www.webservicex.net/" />
+      <method name="GetGeoIP" xmlns="http://www.webservicex.net/">
+        <parameters>
+          <parameter name="IPAddress" type="string" help="IP address, for example 127.0.0.1" value="127.0.0.1" rule="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+</services>

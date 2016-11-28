@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><GetAtomicNumberResponse xmlns="http://www.webserviceX.NET"><GetAtomicNumberResult><NewDataSet>
+  <Table>
+    <AtomicNumber>8</AtomicNumber>
+    <ElementName>Oxygen</ElementName>
+    <Symbol>O</Symbol>
+    <AtomicWeight>15.9994</AtomicWeight>
+    <BoilingPoint>90.2</BoilingPoint>
+    <IonisationPotential>13.61</IonisationPotential>
+    <EletroNegativity>3.5</EletroNegativity>
+    <AtomicRadius>0.74</AtomicRadius>
+    <MeltingPoint>55</MeltingPoint>
+    <Density>1.3318</Density>
+  </Table>
+</NewDataSet></GetAtomicNumberResult></GetAtomicNumberResponse></soap:Body></soap:Envelope>

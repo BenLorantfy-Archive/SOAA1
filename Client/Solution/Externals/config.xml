@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services>
+  <service name="TextService" host="localhost" serviceUrl="/TextService/Case.asmx">
+    <methods>
+      <method name="CaseConvert" xmlns="http://localhost/TextService/">
+        <parameters>
+          <parameter name="incomingString" type="string" help="String to convert" value="hello" rule=""/>
+          <parameter name="convertFlag" type="int" help="1 for UPPER case, 2 for lower case" value="1" rule=">0;&lt;3"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+  <service name="VinniesLoanService" host="localhost" serviceUrl="/VinniesLoanService/Loan.asmx">
+    <methods>
+      <method name="LoanPayment" xmlns="http://localhost/VinniesLoanService/">
+        <parameters>
+          <parameter name="principleAmount" type="float" help="Loan amount" value="150000" rule=">0"/>
+          <parameter name="interestRate" type="float" help="Interest rate in percents" value="8" rule=">0"/>
+          <parameter name="numberOfMonthlyPayments" type="int" help="Number of months to pay the loan" value="360" rule=">0"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+  <service name="TickerTape" host="localhost" serviceUrl="/TickerTape/Stocks.asmx">
+    <methods>
+      <method name="GetQuote" xmlns="http://localhost/TickerTape/">
+        <parameters>
+          <parameter name="tickerSymbol" type="string" help="The code for the stock quote of interest" value="TSLA" rule="^[a-zA-Z]+$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+</services> 
