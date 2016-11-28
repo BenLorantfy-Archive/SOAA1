@@ -68,10 +68,10 @@ var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8
 	
 
 	// Connect to the registry
-	refreshRegistrySocket(registerTeam);
+	createRegistrySocket(registerTeam);
 })();
 
-function refreshRegistrySocket(callback){
+function createRegistrySocket(callback){
 	if(registry.socket){
 		try{
 			registry.socket.destroy();
@@ -91,6 +91,9 @@ function refreshRegistrySocket(callback){
 			callback();
 		}
 	});		
+	registry.socket.on("close",function(){
+		log("Registry socket closed");
+	});
 	registry.socket.on("error",function(e){
 		log("Failed to connect to registry: " + e);
 	});	
@@ -161,7 +164,7 @@ function registerService(index){
 	message += "MCH|" + services.address + "|" + services.port + "|" + String.fromCharCode(EOS);
 	message += String.fromCharCode(EOM) + "\n";
 	
-	refreshRegistrySocket(function(){
+	createRegistrySocket(function(){
 		registry.socket.write(message);
 	});
 }
