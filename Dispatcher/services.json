@@ -51,9 +51,9 @@
 			,"serviceName":"giorpTotaller"
 			,"securityLevel":1
 			,"description":"Calculates and returns the purchase subtotal and various tax additions and grand total for the purchase given the province or territory"
-			,"path":"?"
+			,"path":"/"
             ,"port":1234
-            ,"start":"?"
+            ,"start":"../Services/giorpTotaller/giorpTotaller/bin/Debug/giorpTotaller.exe"
 			,"arguments":[
 				{
 					  "name":"PurchaseAmount"

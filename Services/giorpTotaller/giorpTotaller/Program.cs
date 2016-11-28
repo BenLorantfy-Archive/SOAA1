@@ -1,15 +1,20 @@
-﻿using System;
+﻿//Names: Amshar Basheer, Grigory Kozyrev, Ben Lorantfy, Kyle Stevenson
+//Project Name: giorpTotaller
+//File Name: Program.cs
+//Date: 2016-11-28
+//Description: this file contains the code for the giorpTotaller service
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft;
-using Grapevine.Server;
-using Grapevine.Server.Attributes;
 using System.Threading;
-using Grapevine.Shared;
 using System.Net;
-using Grapevine.Client;
+using NHttp;
+using System.Diagnostics;
+using System.IO;
 
 namespace giorpTotaller
 {
@@ -17,164 +22,185 @@ namespace giorpTotaller
     {
         static void Main(string[] args)
         {
-            var server = new RestServer();
-            server.Start();
-            //defaults to port 1234
-            while (server.IsListening)
+            RunService();            
+        }
+
+        /// <summary>
+        /// Starts server for giorpTotaller service
+        /// </summary>
+        private static void RunService()
+        {
+            using (var server = new HttpServer())
             {
-                Thread.Sleep(300);
+                server.RequestReceived += (s, e) =>
+                {
+                    using (var writer = new StreamWriter(e.Response.OutputStream))
+                    {
+                        bool error = false;
+                        bool calcError = false;
+                        float subTotal = 0;
+                        float Gst = 0;
+                        float Pst = 0;
+                        float Hst = 0;
+                        float grandTotal = 0;
+                        float purchaseAmount = 0;
+                        string province = "";
+
+                        if (e.Request.InputStream != null)
+                        {
+                            // convert request input stream to string
+                            StreamReader reader = new StreamReader(e.Request.InputStream);
+                            string text = reader.ReadToEnd();
+
+                            //deserialize text into JSON and load parameters
+                            var jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(text);
+                            province = jsonObj["Province"].ToString();
+                            string sPurchaseAmount = jsonObj["PurchaseAmount"].ToString();
+
+                            //error check parameters
+                            if (!float.TryParse(sPurchaseAmount, out purchaseAmount))
+                            {
+                                error = true;
+                            }
+
+                            if (purchaseAmount < 0)
+                            {
+                                error = true;
+                            }
+
+                            if (province.Length != 2)
+                            {
+                                error = true;
+                            }
+
+                            //if no errors then call CalculateTotalPurchase to get results into variables
+                            if (!error)
+                            {
+                                calcError = CalculateTotalPurchase(purchaseAmount, province, out subTotal, out Gst, out Pst, out Hst, out grandTotal);
+                            }
+
+                            //setup dictionary with the 5 return values
+                            Dictionary<string, string> responseValues = new Dictionary<string, string>();
+                            responseValues.Add("SubTotal", subTotal.ToString("N2"));
+                            responseValues.Add("Gst", Gst.ToString("N2"));
+                            responseValues.Add("Pst", Pst.ToString("N2"));
+                            responseValues.Add("Hst", Hst.ToString("N2"));
+                            responseValues.Add("GrandTotal", grandTotal.ToString("N2"));
+
+                            //serialize into JSON, then turn into char array, then into byte array and write to response output stream
+                            var jsonResponseObj = Newtonsoft.Json.JsonConvert.SerializeObject(responseValues);
+                            var jsonByteArray = Encoding.GetEncoding("UTF-8").GetBytes(jsonResponseObj.ToCharArray());
+                            e.Response.OutputStream.Write(jsonByteArray, 0, jsonByteArray.Length);
+                        }
+
+                    }
+                };
+
+                server.EndPoint = new IPEndPoint(IPAddress.Loopback, 1234);
+
+                server.Start();
+
+                Console.WriteLine("giorpTotaller service started on port 1234");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        /// <summary>
+        /// Takes in a purchaseAmount and province and calculates out variables subTotal, Gst, Pst, Hst, and grandTotal
+        /// </summary>
+        /// <param name="purchaseAmount">amount of purchase (equivalent of subTotal)</param>
+        /// <param name="province">province/territory (2 letter region code)</param>
+        /// <param name="subTotal">(out variable) same as purchase amount</param>
+        /// <param name="Gst">(out variable) calculated Gst</param>
+        /// <param name="Pst">(out variable) calculated Pst</param>
+        /// <param name="Hst">(out variable) calculated Hst</param>
+        /// <param name="grandTotal">(out variable) calculated grandTotal = subTotal plus taxes</param>
+        /// <returns></returns>
+        private static bool CalculateTotalPurchase(float purchaseAmount, string province, out float subTotal, out float Gst, out float Pst, out float Hst, out float grandTotal)
+        {
+            bool retValue = true; //bool for error check
+
+            subTotal = purchaseAmount;
+            Gst = Pst = Hst = 0;
+            //calculate taxes according to region
+            switch (province)
+            {
+                case "NL":
+                    Gst = 0;
+                    Pst = 0;
+                    Hst = 0.13f * subTotal;
+                    break;
+                case "NS":
+                    Gst = 0;
+                    Pst = 0;
+                    Hst = 0.15f * subTotal;
+                    break;
+                case "NB":
+                    Gst = 0;
+                    Pst = 0;
+                    Hst = 0.13f * subTotal;
+                    break;
+                case "PE":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0.10f * (subTotal + Gst);
+                    Hst = 0;
+                    break;
+                case "QC":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0.095f * (subTotal + Gst);
+                    Hst = 0;
+                    break;
+                case "ON":
+                    Gst = 0;
+                    Pst = 0;
+                    Hst = 0.13f * subTotal;
+                    break;
+                case "MB":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0.07f * subTotal;
+                    Hst = 0;
+                    break;
+                case "SK":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0.05f * subTotal;
+                    Hst = 0;
+                    break;
+                case "AB":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0;
+                    Hst = 0;
+                    break;
+                case "BC":
+                    Gst = 0;
+                    Pst = 0;
+                    Hst = 0.12f * subTotal;
+                    break;
+                case "YT":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0;
+                    Hst = 0;
+                    break;
+                case "NT":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0;
+                    Hst = 0;
+                    break;
+                case "NU":
+                    Gst = 0.05f * subTotal;
+                    Pst = 0;
+                    Hst = 0;
+                    break;
+                default:
+                    retValue = false;
+                    subTotal = 0;
+                    break;
             }
 
-            // This little tidbit will keep your console open after the server
-            // stops until you explicitly close it by pressing the enter key
-            Console.WriteLine("Press Enter to Continue...");
-            Console.ReadLine();
+            grandTotal = subTotal + Gst + Pst + Hst;
+
+            return retValue;
         }
         
-
-        public sealed class MyResource : RestResource
-        {
-            //[RestRoute(HttpMethod = HttpMethod.GET, PathInfo = @"^/foo/\d+$")]
-            //[RestRoute(HttpMethod = HttpMethod.POST, PathInfo = @"^/bar/\D+$")]
-            //public void HandleFooBarRequests(HttpListenerContext context)
-            //{
-            //    this.SendTextResponse(context, "foo bar is a success!");
-            //}
-
-            [RestRoute]
-            public void HandleAllGetRequests(HttpListenerContext context)
-            {
-                bool error = false;
-                bool calcError = false;
-                //this.SendTextResponse(context, "GET is a success!");                
-                float subTotal = 0;
-                float Gst = 0;
-                float Pst = 0;
-                float Hst = 0;
-                float grandTotal = 0;
-                float purchaseAmount = 0;
-                string province = "";
-                
-                var jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(context.Request.InputStream.ToString());
-                province = jsonObj["Province"].ToString();
-                string sPurchaseAmount = jsonObj["PurchaseAmount"].ToString();
-
-                if (!float.TryParse(sPurchaseAmount, out purchaseAmount))
-                {
-                    error = true;
-                }
-
-                if (purchaseAmount < 0)
-                {
-                    error = true;
-                }
-
-                if (province.Length != 2)
-                {
-                    error = true;
-                }
-
-                if (!error)
-                {
-                    calcError = CalculateTotalPurchase(purchaseAmount, province, out subTotal, out Gst, out Pst, out Hst, out grandTotal);
-                }
-                
-                Dictionary<string, string> responseValues = new Dictionary<string, string>();
-                responseValues.Add("SubTotal", subTotal.ToString("N2"));
-                responseValues.Add("Gst", Gst.ToString("N2"));
-                responseValues.Add("Pst", Pst.ToString("N2"));
-                responseValues.Add("Hst", Hst.ToString("N2"));
-                responseValues.Add("GrandTotal", grandTotal.ToString("N2"));
-                var jsonResponseObj = Newtonsoft.Json.JsonConvert.SerializeObject(responseValues);
-                var jsonByteArray = Encoding.GetEncoding("UTF-8").GetBytes(jsonResponseObj.ToCharArray());
-                context.Response.OutputStream.Write(jsonByteArray, 0, jsonByteArray.Length);
-            }
-
-            private bool CalculateTotalPurchase(float purchaseAmount, string province, out float subTotal, out float Gst, out float Pst, out float Hst, out float grandTotal)
-            {
-                bool retValue = true;
-
-                subTotal = purchaseAmount;
-                Gst = Pst = Hst = 0;
-
-                switch (province)
-                {
-                    case "NL":
-                        Gst = 0;
-                        Pst = 0;
-                        Hst = 0.13f * subTotal;
-                        break;
-                    case "NS":
-                        Gst = 0;
-                        Pst = 0;
-                        Hst = 0.15f * subTotal;
-                        break;
-                    case "NB":
-                        Gst = 0;
-                        Pst = 0;
-                        Hst = 0.13f * subTotal;
-                        break;
-                    case "PE":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0.10f * (subTotal + Gst);
-                        Hst = 0;
-                        break;
-                    case "QC":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0.095f * (subTotal + Gst);
-                        Hst = 0;
-                        break;
-                    case "ON":
-                        Gst = 0;
-                        Pst = 0;
-                        Hst = 0.13f * subTotal;
-                        break;
-                    case "MB":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0.07f * subTotal;
-                        Hst = 0;
-                        break;
-                    case "SK":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0.05f * subTotal;
-                        Hst = 0;
-                        break;
-                    case "AB":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0;
-                        Hst = 0;
-                        break;
-                    case "BC":
-                        Gst = 0;
-                        Pst = 0;
-                        Hst = 0.12f * subTotal;
-                        break;
-                    case "YT":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0;
-                        Hst = 0;
-                        break;
-                    case "NT":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0;
-                        Hst = 0;
-                        break;
-                    case "NU":
-                        Gst = 0.05f * subTotal;
-                        Pst = 0;
-                        Hst = 0;
-                        break;
-                    default:
-                        retValue = false;
-                        subTotal = 0;
-                        break;
-                }
-
-                grandTotal = subTotal + Gst + Pst + Hst;
-
-                return retValue;
-            }
-        }
-
     }
 }
