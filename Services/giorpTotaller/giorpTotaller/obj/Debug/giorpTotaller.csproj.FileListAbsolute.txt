@@ -12,7 +12,8 @@ C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.exe
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.pdb
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\giorpTotaller.exe
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\giorpTotaller.pdb
-C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\Grapevine.dll
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\Newtonsoft.Json.dll
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\Newtonsoft.Json.xml
 C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\obj\Debug\giorpTotaller.csprojResolveAssemblyReference.cache
+C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\Common.Logging.dll
+C:\SOA_A1\SOAA1\Services\giorpTotaller\giorpTotaller\bin\Debug\NHttp.dll
