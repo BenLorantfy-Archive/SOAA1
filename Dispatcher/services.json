@@ -1,5 +1,12 @@
 {
-	"services":[
+	 "team":"BestTeam"
+	 
+	,"registry":{
+		 "address":"127.0.0.1"
+		,"port":3128
+	}
+	
+	,"services":[
 		{
 			 "tagName":"CAR-LOAN"
 			,"serviceName":"Car Loan Calculator"

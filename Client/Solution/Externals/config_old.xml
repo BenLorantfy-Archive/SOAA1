@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services>
+  <service name="Airport Information Webservice" host="www.webservicex.net" serviceUrl="/airport.asmx">
+    <methods>
+      <method name="GetAirportInformationByCountry" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="country" type="string" help="Full country name" value="Canada" rule="^[a-zA-Z]+$"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByAirportCode" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="airportCode" type="string" help="Code of the airport" value="YYZ" rule="^[a-zA-Z]{3}$"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByCityOrAirportName" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="cityOrAirportName" type="string" help="Name of the city and/or airport. Most of the time contains both like 'Toronto Pearson'" value="Moscow Domodedovo" rule="^[a-zA-Z ]+$"/>
+        </parameters>
+      </method>
+      <method name="getAirportInformationByISOCountryCode" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="CountryAbbrviation" type="string" help="Country 2 letter ISO Alpha-2 code. For example 'CA', 'US', 'RU'" value="US" rule="^[a-zA-Z]{2}$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+  <service name="Country Details" host="www.webservicex.net" serviceUrl="/country.asmx">
+    <methods>
+      <method name="GetCountries" xmlns="http://www.webserviceX.NET" />
+      <method name="GetCountryByCountryCode" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="CountryCode" type="string" help="Country 2 letter ISO Alpha-2 code. For example 'CA', 'US', 'RU'" value="US" rule="^[a-zA-Z]{2}$"/>
+        </parameters>
+      </method>
+      <method name="GetCurrencies" xmlns="http://www.webserviceX.NET">
+      </method>
+      <method name="GetISOCountryCodeByCountyName" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="CountryName" type="string" help="Full country name" value="Canada" rule="^[a-zA-Z]+$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+  <service name="GeoIPService" host="www.webservicex.net" serviceUrl="/geoipservice.asmx">
+    <methods>
+      <method name="GetGeoIPContext" xmlns="http://www.webservicex.net/" />
+      <method name="GetGeoIP" xmlns="http://www.webservicex.net/">
+        <parameters>
+          <parameter name="IPAddress" type="string" help="IP address, for example 127.0.0.1" value="127.0.0.1" rule="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+  <service name="Periodic Table" host="www.webservicex.net" serviceUrl="/periodictable.asmx">
+    <methods>
+      <method name="GetAtoms" xmlns="http://www.webserviceX.NET" />
+      <method name="GetAtomicNumber" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="ElementName" type="string" help="Full name of the element, for example 'Oxygen', 'Hydrogen'" value="Oxygen" rule="^[a-zA-Z]+$"/>
+        </parameters>
+      </method>
+	  <method name="GetElementSymbol" xmlns="http://www.webserviceX.NET">
+        <parameters>
+          <parameter name="ElementName" type="string" help="Full name of the element, for example 'Oxygen', 'Hydrogen'" value="Oxygen" rule="^[a-zA-Z]+$"/>
+        </parameters>
+      </method>
+    </methods>
+  </service>
+</services>

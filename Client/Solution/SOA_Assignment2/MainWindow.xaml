@@ -1,0 +1,126 @@
+﻿<Window x:Class="SOA_Assignment2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:control="clr-namespace:SOA_Assignment2.Controls"
+        xmlns:converters="clr-namespace:SOA_Assignment2.Converters"
+        xmlns:models="clr-namespace:WebServiceCore.Models;assembly=WebServiceCore"
+        mc:Ignorable="d"
+        Title="SOAP Sender" MinHeight="500" Height="500" MinWidth="425" Width="425">
+    <Window.Resources>
+        <converters:EnumerableToCollectionView x:Key="IEnumToCollection" />
+        <converters:ReverseBooleanToVisibility x:Key="ReverseBooleanToVisibility" />
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10" Grid.IsSharedSizeScope="True">
+            <StackPanel Visibility="{Binding Path=IsLoading, Converter={StaticResource ReverseBooleanToVisibility}}">
+                <Button Command="{Binding RefreshCommand}" IsEnabled="{Binding RefreshEnabled}" 
+                        Width="Auto" Padding="5 5 5 5" Margin="0,0,0,10"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Content="Reload Config" FontFamily="OCR A Std"/>
+
+                <ComboBox ItemsSource="{Binding Path=Services, Converter={StaticResource IEnumToCollection}}"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding Path=SelectedService}"
+                          SelectedIndex="-1" MinWidth="100"
+                          Margin="5 5 5 5" Padding="5 5 5 5" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+            
+                <ComboBox ItemsSource="{Binding Path=SelectedService.Methods, Converter={StaticResource IEnumToCollection}}"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding Path=SelectedMethod}"
+                          SelectedIndex="-1"
+                          Visibility="{Binding Path=SelectedService, Converter={StaticResource NullToVisibilityConverter}}"
+                          Margin="5 5 5 5" Padding="5 5 5 5" MinWidth="100"
+                          HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+
+                <StackPanel Visibility="{Binding Path=DisplayParameters, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Margin="0 5 0 10" HorizontalAlignment="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="ParametersColumn1" Width="Auto"/>
+                            <ColumnDefinition SharedSizeGroup="ParametersColumn2" Width="Auto"/>
+                            <ColumnDefinition SharedSizeGroup="ParametersColumn3"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Parameter Name" Padding="5 5 5 5" Margin="0,0,0,5"
+                                       FontSize="14" FontWeight="Bold" Background="#FFECECEC"/>
+                        <TextBlock Text="Parameter Type" Grid.Column="1" Padding="5 5 5 5" Margin="0,0,0,5"
+                                       FontSize="14" FontWeight="Bold" Background="#FFECECEC"/>
+                        <TextBlock Text="Parameter Value" Grid.Column="2" Padding="5 5 5 5" Margin="0,0,0,5"
+                                       FontSize="14" FontWeight="Bold" Background="#FFECECEC"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Path=SelectedMethod.Parameters}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="ParametersColumn1" Width="Auto"/>
+                                        <ColumnDefinition SharedSizeGroup="ParametersColumn2" Width="Auto"/>
+                                        <ColumnDefinition SharedSizeGroup="ParametersColumn3"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Help}" 
+                                                   Padding="5 5 5 5" Margin="0,0,0,5" FontSize="14"/>
+                                    <TextBlock Text="{Binding Path=Type}" ToolTip="{Binding Path=Help}" Grid.Column="1"  
+                                                   Padding="5 5 5 5" Margin="0,0,0,5" FontSize="14"/>
+                                    <TextBox Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" 
+                                                 TextChanged="TextBoxBase_OnTextChanged" ToolTip="{Binding Path=Help}" 
+                                                 Padding="5 5 5 5" Margin="0,0,0,5" FontSize="14"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Command="{Binding Path=SendCommand}" IsEnabled="{Binding Path=CanSend}" 
+                                Padding="5 5 5 5" Margin="0,10,0,5"
+                                FontFamily="OCR A Std" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center">Send Request</Button>
+                </StackPanel>
+            </StackPanel>
+
+            <control:LoadingAnimation HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </StackPanel>
+        
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="1" Visibility="{Binding Path=ResultList, Converter={StaticResource NullToVisibilityConverter}}"
+                      PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+            <TreeView ItemsSource="{Binding Path=ResultList}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type models:ResponseHolder}" ItemsSource="{Binding Path=Parameters}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type models:MethodParameter}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Name}" />
+                            <TextBlock Text=" : " />
+                            <TextBlock Text="{Binding Path=Value}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </ScrollViewer>
+    </Grid>
+</Window>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
