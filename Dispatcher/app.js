@@ -68,34 +68,102 @@ var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8
 	
 
 	// Connect to the registry
+	refreshRegistrySocket(registerTeam);
+})();
+
+function refreshRegistrySocket(callback){
+	if(registry.socket){
+		try{
+			registry.socket.destroy();
+		}catch(e){ }		
+	}
+	
+	// Connect to the registry
 	registry.socket = net.createConnection({ port:registry.port, host:registry.address },function(){
+		registry.buffer = "";
+		registry.messages = [];
+		
 		log("Connected to registry");
 		log("Listening for messages from registry");
 		listenForMessages(registry);
 		
-		// [ Register Team ]
-		registerTeam();
+		if(typeof callback === "function"){
+			callback();
+		}
 	});		
 	registry.socket.on("error",function(e){
 		log("Failed to connect to registry: " + e);
-	});
-
-})();
+	});	
+}
 
 // [ Registers the team with the registry ]
 function registerTeam(){
-	var teamName = services.team;
+	dns.lookup(require('os').hostname(), function(err, ip, fam){
+		var teamName = services.team.name;	
+		var message = "";	
+		
+		// [ Save the IP ]
+		services.address = ip;
+		
+		// [ Create the register-team message ]
+		message += String.fromCharCode(BOM) + "DRC|REG-TEAM|||" + String.fromCharCode(EOS);
+		message += "INF|" + teamName + "|||" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
+		
+		// [ Write the message to the stream ]
+		registry.state = "registeringTeam";
+		registry.socket.write(message);		
+	});
+
+}
+
+// [ Registers all the services with the registry ]
+function registerService(index){
+	var team = services.team;
+	var service = services.services[index];
+	registry.state = "registeringService:" + index;
 	
 	var message = "";
 	
+	// [ Create the register service message ]
+	message += String.fromCharCode(BOM) + "DRC|PUB-SERVICE|" + team.name + "|" + team.id + "|" + String.fromCharCode(EOS);
 	
-	// [ Create the register-team message ]
-	message += String.fromCharCode(BOM) + "DRC|REG-TEAM|||" + String.fromCharCode(EOS);
-	message += "INF|" + teamName + "|||" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
+	message += "SRV|" + 
+					service.tagName.replace(/\|/g,"") + "|" + 
+					service.serviceName.replace(/\|/g,"") + "|" + 
+					service.securityLevel + "|" +
+					service.arguments.length + "|" + 
+					service.returns.length + "|" + 
+					service.description.replace(/\|/g,"") + "|" + 
+					String.fromCharCode(EOS);
+					
+	// [ Add all the arguments ]
+	for(var i = 0; i < service.arguments.length; i++){
+		var argument = service.arguments[i];
+		message += "ARG|" + 
+			(i + 1) + "|" + 
+			argument.name.replace(/\|/g,"") + "|" + 
+			argument.type + "|" + 
+			(argument.mandatory ? "mandatory" : "optional") + "||" +
+			String.fromCharCode(EOS);
+	}
 	
-	// [ Write the message to the stream ]
-	registry.state = "registeringTeam";
-	registry.socket.write(message);
+	// [ Add all the responses ]
+	for(var i = 0; i < service.returns.length; i++){
+		var ret = service.returns[i];
+		message += "RSP|" + 
+			(i + 1) + "|" + 
+			ret.name.replace(/\|/g,"") + "|" + 
+			ret.type + "||" +
+			String.fromCharCode(EOS);
+	}
+	
+	// [ Add the service location ]
+	message += "MCH|" + services.address + "|" + services.port + "|" + String.fromCharCode(EOS);
+	message += String.fromCharCode(EOM) + "\n";
+	
+	refreshRegistrySocket(function(){
+		registry.socket.write(message);
+	});
 }
 
 // [ Consumes a message and performs required actions ]
@@ -141,9 +209,20 @@ function consumeMessage(client,message){
 					log("Successfully registered team");
 				}else{
 					log("Failed to register team: " + parts[3]);
+					break;
 				}
 				
-				break;
+				services.team.id = parts[2];
+				services.team.expiration = parts[3];
+				
+				// After team is registered, next step is to register the services
+				registerService(0);
+				
+			}else if(registry.state.indexOf("registeringService") == 0){
+				var index = registry.state.split(":")[1] * 1;
+				if(index < services.services.length - 1){
+					registerService(index + 1);
+				}	
 			}
 		}
 	}
@@ -151,8 +230,7 @@ function consumeMessage(client,message){
 
 // [ Executes a service given the segments ]
 function executeService(client,segments){
-	
-    
+	  
     // [ Make sure SRV segment exists ]
     if(!segments[1]){
 		log("Missing SRV segment",1);
@@ -247,7 +325,7 @@ function executeService(client,segments){
 	    	for(var i = 0; i < service.returns.length; i++){
 	    		var ret = service.returns[i];
 	    		var value = data[service.returns[i].name];
-	    		response += "RSP|" + i + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
+	    		response += "RSP|" + (i + 1) + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
 	    	}
 
 	    	response += String.fromCharCode(EOM);
@@ -288,7 +366,7 @@ function createServer(err, ip, fam) {
 
     log("Created server");
 	// [ Listen for Connections ]
-	server.listen(2016, ip, function(){
+	server.listen(services.port, ip, function(){
 		var info = server.address();
 		log('Server listening on ' + info.address + ":" + info.port + "...");
 	});

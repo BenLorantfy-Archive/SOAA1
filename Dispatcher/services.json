@@ -1,5 +1,9 @@
 {
-	 "team":"BestTeam"
+	 "team":{
+		"name":"BestTeam"
+	 }
+	 
+	,"port":2016
 	 
 	,"registry":{
 		 "address":"127.0.0.1"
@@ -9,7 +13,7 @@
 	,"services":[
 		{
 			 "tagName":"CAR-LOAN"
-			,"serviceName":"Car Loan Calculator"
+			,"serviceName":"CarLoanCalculator"
 			,"securityLevel":1
 			,"description":"Calculates car loan based on a principle amount and an interest rate"
 			,"path":"/calculations"
@@ -46,7 +50,7 @@
 			 "tagName":"GIORP-TOTAL"
 			,"serviceName":"giorpTotaller"
 			,"securityLevel":1
-			,"description":"Calculates and returns the purchase sub-total, various tax additions and grand total for the purchase given the province/territory"
+			,"description":"Calculates and returns the purchase subtotal and various tax additions and grand total for the purchase given the province or territory"
 			,"path":"?"
             ,"port":1234
             ,"start":"?"
