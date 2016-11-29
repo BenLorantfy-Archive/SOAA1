@@ -8,6 +8,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include "ProcessHelper.h"
+#include "HttpHelper.h"
+
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -15,7 +18,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
-
 #include <signal.h>  
 #include <tchar.h>  
 
@@ -54,6 +56,17 @@ BOOL WINAPI consoleHandler(DWORD signal) {
 	return TRUE;
 }
 
+//#define _TEST_
+
+#ifdef _TEST_
+
+int main(void)
+{
+	return 0;
+}
+
+#else
+
 int __cdecl main(void)
 {
 	WSADATA wsaData;
@@ -67,6 +80,11 @@ int __cdecl main(void)
 	int iSendResult;
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
+
+	char* success = http_success();
+	int success_len = strlen(success);
+
+	char* buffer;
 
 	// Set signal handler
 	if (!SetConsoleCtrlHandler(consoleHandler, TRUE)) {
@@ -86,6 +104,8 @@ int __cdecl main(void)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
+
+	// process_message("", 0);
 
 	do
 	{
@@ -145,37 +165,38 @@ int __cdecl main(void)
 		closesocket(ListenSocket);
 
 		// Receive until the peer shuts down the connection
-		do {
-			for (int i = 0; i < DEFAULT_BUFLEN; ++i)
-			{
-				recvbuf[i] = 0;
-			}
+		for (int i = 0; i < DEFAULT_BUFLEN; ++i)
+		{
+			recvbuf[i] = 0;
+		}
 
-			iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-			if (iResult > 0) {
-				printf("Bytes received: %d\n", iResult);
-				printf("Received message: %s\n", recvbuf);
+		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+		if (iResult > 0) {
+			printf("Bytes received: %d\n", iResult);
+			printf("Received message: %s\n", recvbuf);
 
-				// Echo the buffer back to the sender
-				iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-				if (iSendResult == SOCKET_ERROR) {
-					printf("send failed with error: %d\n", WSAGetLastError());
-					closesocket(ClientSocket);
-					WSACleanup();
-					return 1;
-				}
-				printf("Bytes sent: %d\n", iSendResult);
-			}
-			else if (iResult == 0)
-				printf("Connection closing...\n");
-			else {
-				printf("recv failed with error: %d\n", WSAGetLastError());
+			// buffer = process_message(recvbuf, strlen(recvbuf) + 1);
+
+			// Echo the buffer back to the sender
+			iSendResult = send(ClientSocket, success, success_len, 0);
+			if (iSendResult == SOCKET_ERROR) {
+				printf("send failed with error: %d\n", WSAGetLastError());
 				closesocket(ClientSocket);
 				WSACleanup();
 				return 1;
 			}
 
-		} while (iResult > 0);
+			printf("Bytes sent: %d\n", success_len);
+			printf("Message sent: %s\n", success);
+		}
+		else if (iResult == 0)
+			printf("Connection closing...\n");
+		else {
+			printf("recv failed with error: %d\n", WSAGetLastError());
+			closesocket(ClientSocket);
+			WSACleanup();
+			return 1;
+		}
 
 		// shutdown the connection since we're done
 		iResult = shutdown(ClientSocket, SD_SEND);
@@ -193,5 +214,7 @@ int __cdecl main(void)
 	WSACleanup();
 	return 0;
 }
+
+#endif // _TEST_
 
 #endif

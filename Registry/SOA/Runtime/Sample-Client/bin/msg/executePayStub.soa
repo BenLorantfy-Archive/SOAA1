@@ -1,0 +1,5 @@
+DRC|EXEC-SERVICE|||
+SRV|PayStubCalculator|||
+ARG|0|type|int||1|
+ARG|1|hours|string||40|
+ARG|2|rate|float||14.5|

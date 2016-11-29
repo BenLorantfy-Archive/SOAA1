@@ -88,6 +88,48 @@
 					,"type":"float"
 				}
 			]
+		},
+		{
+			 "tagName":"PAY_STUB"
+			,"serviceName":"PayStubCalculator"
+			,"securityLevel":1
+			,"description":"Calculates the total pay amount for emplyee."
+			,"path":"/calculations"
+            ,"port":555
+            ,"start":"echo 3"
+			,"arguments":[
+				{
+					  "name":"type"
+					 ,"mandatory":true
+					 ,"type":"int"
+				},
+				{
+					  "name":"hours"
+					 ,"mandatory":true
+					 ,"type":"float"
+				},
+				{
+					  "name":"rate"
+					 ,"mandatory":true
+					 ,"type":"float"
+				},
+				{
+					  "name":"pieces"
+					 ,"mandatory":false
+					 ,"type":"int"
+				},
+				{
+					  "name":"duration"
+					 ,"mandatory":false
+					 ,"type":"int"
+				}
+			]
+			,"returns":[
+				{
+					 "name":"TotalPayValue"
+					,"type":"float"
+				}
+			]
 		}
 	]
 }
