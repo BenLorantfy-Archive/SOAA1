@@ -40,7 +40,7 @@ namespace WebServiceCore.Utilities
         {
             var soap = SoapHelper.GenerateSOAP(service, method);
 
-            return SendHttpRequest(service.Host, soap.Item1, soap.Item2, port);
+            return SendHttpRequest(service.IP, soap.Item1, soap.Item2, port);
         }
 
         /// <summary>

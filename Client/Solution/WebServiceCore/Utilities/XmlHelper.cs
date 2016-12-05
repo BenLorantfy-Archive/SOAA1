@@ -172,7 +172,7 @@ namespace WebServiceCore.Utilities
                     name += " " + (number + 1);
                 }
 
-                services.Add(new WebService(name, host, url, methods));
+                //services.Add(new WebService(name, host, url, methods));
             }
 
             return services;

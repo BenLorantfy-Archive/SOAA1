@@ -39,13 +39,31 @@ namespace SOA_Assignment2.ViewModels
         private IWebMethod _selectedMethod;
 
         private IWebService _selectedService;
+        private ITeam _selectedTeam;
 
         private IEnumerable<IWebService> _services;
+        private IEnumerable<ITeam> _teams;
 
         public ServiceViewModel()
         {
             _dialogService = new DialogService();
             _services = new List<IWebService>();
+            _teams = new List<ITeam>()
+            {
+                new Team("BestTeam",
+                         new List<IWebService>()
+                         {
+                             new WebService("192.168.238.1",
+                                            2016,
+                                            "PayStubCalculator",
+                                            new List<IMethodParameter>()
+                                            {
+                                                new MethodParameter("type", "int", "1"),
+                                                new MethodParameter("hours", "string", "40"),
+                                                new MethodParameter("rate", "float", "14.5"),
+                                            })
+        })
+            };
             RefreshEnabled = true;
 
             _loading = false;
@@ -58,6 +76,11 @@ namespace SOA_Assignment2.ViewModels
         public IEnumerable<IWebService> Services
         {
             get { return _services; }
+        }
+
+        public IEnumerable<ITeam> Teams
+        {
+            get { return _teams; }
         }
 
         public ICommand RefreshCommand
@@ -78,6 +101,20 @@ namespace SOA_Assignment2.ViewModels
                 _selectedService = value;
 
                 OnPropertyChanged("SelectedService");
+                OnPropertyChanged("CanSend");
+
+                DisplayParameters = true;
+            }
+        }
+
+        public ITeam SelectedTeam
+        {
+            get { return _selectedTeam; }
+            set
+            {
+                _selectedTeam = value;
+                
+                OnPropertyChanged("SelectedTeam");
                 OnPropertyChanged("CanSend");
 
                 ResultList = null;
@@ -149,7 +186,7 @@ namespace SOA_Assignment2.ViewModels
             get
             {
                 return SelectedService != null && SelectedService.IsValid &&
-                       SelectedMethod != null && SelectedMethod.IsValid;
+                       SelectedTeam != null && SelectedTeam.IsValid;
             }
         }
 
@@ -157,7 +194,7 @@ namespace SOA_Assignment2.ViewModels
 
         public void RefreshConfing(object obj)
         {
-            RefreshEnabled = false;
+            /*RefreshEnabled = false;
             OnPropertyChanged("RefreshEnabled");
 
             try
@@ -172,7 +209,7 @@ namespace SOA_Assignment2.ViewModels
             }
 
             RefreshEnabled = true;
-            OnPropertyChanged("RefreshEnabled");
+            OnPropertyChanged("RefreshEnabled");*/
         }
 
         public void SendRequest(object obj)
@@ -190,7 +227,7 @@ namespace SOA_Assignment2.ViewModels
 
             try
             {
-                receivedMessage = HttpHelper.SendHttpRequest(SelectedService, SelectedMethod);
+                receivedMessage = HL7Helper.SendRequest(SelectedService);
             }
             catch (Exception e)
             {
@@ -202,6 +239,7 @@ namespace SOA_Assignment2.ViewModels
             }
 
             LoadingMessage = "Analyzing";
+            string example = "PUB|OK|||1|RSP|1|TotalPayValue|float|580.00|";
 
             string validation = string.Empty;
             if (!HttpHelper.ValidateHeader(receivedMessage, out validation))
