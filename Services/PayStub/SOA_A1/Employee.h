@@ -1,10 +1,10 @@
 #ifndef _EMPLOYEE_H_
 #define _EMPLOYEE_H_
 
-extern const int EMPLOYEE_TYPE_PART_TIME;
-extern const int EMPLOYEE_TYPE_FULL_TIME;
-extern const int EMPLOYEE_TYPE_SEASONAL;
-extern const int EMPLOYEE_TYPE_CONTRACT;
+#define EMPLOYEE_TYPE_PART_TIME 1
+#define EMPLOYEE_TYPE_FULL_TIME 2
+#define EMPLOYEE_TYPE_SEASONAL  3
+#define EMPLOYEE_TYPE_CONTRACT  4
 
 extern const unsigned int TRUE_L;
 extern const unsigned int FALSE_L;

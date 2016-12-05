@@ -320,6 +320,13 @@ function executeService(client,segments){
     	}
 
     	if(!response){
+			if (typeof(data) == "string"){
+				try{
+					data = JSON.parse(data);
+				}catch(e){
+					console.log("Weird: " + e);
+				}
+			}
 
 	    	// [ Start response ]
 	    	response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
