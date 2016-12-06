@@ -16,7 +16,7 @@ public class ErrorResponse extends Response {
 
     
     public ErrorResponse(String code, String message){
-        super(500);
+        super(200);
         
         error.code = code;
         error.message = message;
