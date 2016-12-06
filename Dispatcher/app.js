@@ -226,6 +226,9 @@ function consumeMessage(client,message){
 				if(index < services.services.length - 1){
 					registerService(index + 1);
 				}	
+			}else if (registry.state.indexOf("queringTeam") >= 0){
+				// fjdfjejkhe
+				callService(client, segments)
 			}
 		}
 	}
@@ -258,7 +261,10 @@ function executeService(client,segments){
 		return;
 	}
 	serviceName = srv[2].trim();
-	
+	queryTeam(services.team.name, services.team.id, serviceName);
+}
+
+function callService(client, segments){
 	// [ Look for service info ]
 	var service = null;
 	for(var i = 0; i < services.services.length; i++){
@@ -474,6 +480,31 @@ function listenForMessages(client){
 
 	});			
 	
+}
+
+function queryTeam(teamName, teamID, serviceName){
+	dns.lookup(require('os').hostname(), function(err, ip, fam){
+		var message = "";
+		
+		var serviceTag = "";
+		for(var i = 0; i < services.services.length; i++){
+        	var service = services.services[i];
+			if (service["serviceName"]
+				&& service["serviceName"] == serviceName){
+					serviceTag = service["tagName"];
+				}
+		}
+		// [ Create the query-team message ]
+		message += String.fromCharCode(BOM) + "DRC|QUERY-TEAM|" + teamName + "|" + teamID + "|" + String.fromCharCode(EOS);
+		message += "INF|" + teamName + "|" + teamID + "|" + serviceTag + "|" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
+		
+		// [ Write the message to the stream ]
+		registry.state = "queringTeam";
+		console.log("Sending a message [" + message + "]");
+		createRegistrySocket(function(){
+			registry.socket.write(message);
+		});
+	});
 }
 
 // [ Look up the local private IP and then start the server ]
