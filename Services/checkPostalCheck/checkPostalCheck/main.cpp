@@ -40,9 +40,9 @@ void post_method_handler(const shared_ptr< Session > session)
 			if (!d.HasParseError()) {
 
 				//get values from body
-				if (d.HasMember("postalcode") && d.HasMember("region")) {
+				if (d.HasMember("postalcode") && d.HasMember("province")) {
 					Value& postal = d["postalcode"];
-					Value& region = d["region"];
+					Value& region = d["province"];
 					string postalCode = postal.GetString();
 					string regionCode = region.GetString();
 
@@ -94,7 +94,7 @@ void post_method_handler(const shared_ptr< Session > session)
 					ostringstream convert;
 					ostringstream convert_length;
 
-					convert << "{\"error\": \"true\", \"code\": \"10\", \"message\" : \"must provide postalcode and region in body\"}";
+					convert << "{\"error\": \"true\", \"code\": \"10\", \"message\" : \"must provide postalcode and province in body\"}";
 					string json_response = convert.str();
 					convert_length << json_response.length();
 					string len = convert_length.str();
