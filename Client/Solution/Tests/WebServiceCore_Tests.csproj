@@ -68,7 +68,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FunctionalTests\ConfigFunctionalTests.cs" />
-    <Compile Include="UnitTests\XmlTests.cs" />
+    <Compile Include="UnitTests\HL7Tests.cs" />
     <Compile Include="UnitTests\HttpTests.cs" />
     <Compile Include="UnitTests\LoggerTests.cs" />
     <Compile Include="UnitTests\SoapTests.cs" />

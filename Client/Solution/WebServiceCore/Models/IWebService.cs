@@ -24,9 +24,19 @@ namespace WebServiceCore.Models
     public interface IWebService
     {
         /// <summary>
-        /// Gets the service host.
+        /// Gets the service IP.
         /// </summary>
-        string Host { get; }
+        string IP { get; }
+
+        /// <summary>
+        /// Gets the service port.
+        /// </summary>
+        int Port { get; }
+
+        /// <summary>
+        /// Gets or sets the service name.
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
         /// Returns true if web service is valid.
@@ -39,16 +49,6 @@ namespace WebServiceCore.Models
         /// <summary>
         /// Gets or sets the service methods.
         /// </summary>
-        IEnumerable<IWebMethod> Methods { get; }
-
-        /// <summary>
-        /// Gets or sets the service name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Gets the service URL.
-        /// </summary>
-        string Url { get; }
+        IEnumerable<IMethodParameter> Parameters { get; }
     }
 }

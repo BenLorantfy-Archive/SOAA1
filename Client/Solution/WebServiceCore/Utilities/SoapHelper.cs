@@ -53,7 +53,7 @@ namespace WebServiceCore.Utilities
         /// <returns><see cref="Tuple"/> with header as a first parameter and SOAP envelop as the second one.</returns>
         public static Tuple<string, string> GenerateSOAP(IWebService service, IWebMethod method)
         {
-            return GenerateSOAP(service.Host, service.Url, method);
+            return GenerateSOAP(service.IP, service.IP, method);
         }
 
         /// <summary>

@@ -151,13 +151,18 @@
     <ClCompile Include="ContractEmployee.c" />
     <ClCompile Include="Employee.c" />
     <ClCompile Include="HttpHelper.c" />
+    <ClCompile Include="jsmn.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="ProcessHelper.c" />
     <ClCompile Include="SeasonalEmployee.c" />
+    <ClCompile Include="Tests.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContractEmployee.h" />
     <ClInclude Include="Employee.h" />
     <ClInclude Include="HttpHelper.h" />
+    <ClInclude Include="jsmn.h" />
+    <ClInclude Include="ProcessHelper.h" />
     <ClInclude Include="SeasonalEmployee.h" />
     <ClInclude Include="Tests.h" />
   </ItemGroup>

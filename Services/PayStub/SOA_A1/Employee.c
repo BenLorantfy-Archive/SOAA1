@@ -3,11 +3,6 @@
 
 #include "Employee.h"
 
-const int EMPLOYEE_TYPE_PART_TIME = 1;
-const int EMPLOYEE_TYPE_FULL_TIME = 2;
-const int EMPLOYEE_TYPE_SEASONAL = 3;
-const int EMPLOYEE_TYPE_CONTRACT = 4;
-
 const int TRUE_L = 1;
 const int FALSE_L = 0;
 

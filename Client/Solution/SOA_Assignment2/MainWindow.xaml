@@ -25,18 +25,18 @@
                         Width="Auto" Padding="5 5 5 5" Margin="0,0,0,10"
                         HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Content="Reload Config" FontFamily="OCR A Std"/>
 
-                <ComboBox ItemsSource="{Binding Path=Services, Converter={StaticResource IEnumToCollection}}"
+                <ComboBox ItemsSource="{Binding Path=Teams, Converter={StaticResource IEnumToCollection}}"
                           DisplayMemberPath="Name"
-                          SelectedValue="{Binding Path=SelectedService}"
+                          SelectedValue="{Binding Path=SelectedTeam}"
                           SelectedIndex="-1" MinWidth="100"
                           Margin="5 5 5 5" Padding="5 5 5 5" 
                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
             
-                <ComboBox ItemsSource="{Binding Path=SelectedService.Methods, Converter={StaticResource IEnumToCollection}}"
+                <ComboBox ItemsSource="{Binding Path=SelectedTeam.Services, Converter={StaticResource IEnumToCollection}}"
                           DisplayMemberPath="Name"
-                          SelectedValue="{Binding Path=SelectedMethod}"
+                          SelectedValue="{Binding Path=SelectedService}"
                           SelectedIndex="-1"
-                          Visibility="{Binding Path=SelectedService, Converter={StaticResource NullToVisibilityConverter}}"
+                          Visibility="{Binding Path=SelectedTeam, Converter={StaticResource NullToVisibilityConverter}}"
                           Margin="5 5 5 5" Padding="5 5 5 5" MinWidth="100"
                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
 
@@ -57,7 +57,7 @@
                                        FontSize="14" FontWeight="Bold" Background="#FFECECEC"/>
                     </Grid>
 
-                    <ItemsControl ItemsSource="{Binding Path=SelectedMethod.Parameters}">
+                    <ItemsControl ItemsSource="{Binding Path=SelectedService.Parameters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>

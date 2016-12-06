@@ -81,7 +81,7 @@ int __cdecl main(void)
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
 
-	char* success = http_success();
+	char* success = http_success("\0", 0);
 	int success_len = strlen(success);
 
 	char* buffer;
@@ -104,8 +104,6 @@ int __cdecl main(void)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
-
-	// process_message("", 0);
 
 	do
 	{
@@ -175,10 +173,10 @@ int __cdecl main(void)
 			printf("Bytes received: %d\n", iResult);
 			printf("Received message: %s\n", recvbuf);
 
-			// buffer = process_message(recvbuf, strlen(recvbuf) + 1);
+			buffer = process_message(recvbuf, strlen(recvbuf) + 1);
 
 			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, success, success_len, 0);
+			iSendResult = send(ClientSocket, buffer, strlen(buffer), 0);
 			if (iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
 				closesocket(ClientSocket);
@@ -187,7 +185,7 @@ int __cdecl main(void)
 			}
 
 			printf("Bytes sent: %d\n", success_len);
-			printf("Message sent: %s\n", success);
+			printf("Message sent: %s\n", buffer);
 		}
 		else if (iResult == 0)
 			printf("Connection closing...\n");

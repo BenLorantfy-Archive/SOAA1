@@ -31,21 +31,27 @@ namespace WebServiceCore.Models
         /// <param name="host">Address of the web service host.</param>
         /// <param name="url">Url of the web service.</param>
         /// <param name="methods"><see cref="IEnumerable{T}"/> of <see cref="IWebMethod"/> used in web service.</param>
-        public WebService(string name, string host, string url, IEnumerable<IWebMethod> methods)
+        public WebService(string ip, int port, string name, IEnumerable<IMethodParameter> parameters)
         {
-            if (methods == null)
+            if (parameters == null)
             {
-                throw new ArgumentNullException("methods != null");
+                throw new ArgumentNullException("parameters != null");
             }
 
+            IP = ip;
+            Port = port;
             Name = name;
-            Host = host;
-            Url = url;
-            Methods = methods;
+            Parameters = parameters;
         }
 
         /// <inheritdoc />
-        public string Host { get; }
+        public string IP { get; }
+
+        /// <inheritdoc />
+        public int Port { get; }
+
+        /// <inheritdoc />
+        public string Name { get; }
 
         /// <inheritdoc />
         public bool IsValid
@@ -53,10 +59,18 @@ namespace WebServiceCore.Models
             get
             {
                 if (string.IsNullOrWhiteSpace(Name)
-                    || string.IsNullOrWhiteSpace(Host)
-                    || string.IsNullOrWhiteSpace(Url))
+                    || string.IsNullOrWhiteSpace(IP)
+                    || Port <= 0)
                 {
                     return false;
+                }
+
+                foreach (var parameter in Parameters)
+                {
+                    if (!parameter.IsValid)
+                    {
+                        return false;
+                    }
                 }
 
                 return true;
@@ -64,12 +78,6 @@ namespace WebServiceCore.Models
         }
 
         /// <inheritdoc />
-        public IEnumerable<IWebMethod> Methods { get; }
-
-        /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public string Url { get; }
+        public IEnumerable<IMethodParameter> Parameters { get; }
     }
 }

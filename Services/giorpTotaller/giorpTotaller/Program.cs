@@ -45,6 +45,7 @@ namespace giorpTotaller
                         float grandTotal = 0;
                         float purchaseAmount = 0;
                         string province = "";
+                        string errorMsg = "";
 
                         if (e.Request.InputStream != null)
                         {
@@ -61,16 +62,19 @@ namespace giorpTotaller
                             if (!float.TryParse(sPurchaseAmount, out purchaseAmount))
                             {
                                 error = true;
+                                errorMsg += "invalid input for purchaseAmount ";
                             }
 
                             if (purchaseAmount < 0)
                             {
                                 error = true;
+                                errorMsg += "purchaseAmount can't be negative ";
                             }
 
                             if (province.Length != 2)
                             {
                                 error = true;
+                                errorMsg += "province length not equal to 2";
                             }
 
                             //if no errors then call CalculateTotalPurchase to get results into variables
@@ -79,13 +83,27 @@ namespace giorpTotaller
                                 calcError = CalculateTotalPurchase(purchaseAmount, province, out subTotal, out Gst, out Pst, out Hst, out grandTotal);
                             }
 
-                            //setup dictionary with the 5 return values
-                            Dictionary<string, string> responseValues = new Dictionary<string, string>();
+                            //setup dictionary with the return values
+                            Dictionary<string, object> responseValues = new Dictionary<string, object>();
                             responseValues.Add("SubTotal", subTotal.ToString("N2"));
                             responseValues.Add("Gst", Gst.ToString("N2"));
                             responseValues.Add("Pst", Pst.ToString("N2"));
                             responseValues.Add("Hst", Hst.ToString("N2"));
                             responseValues.Add("GrandTotal", grandTotal.ToString("N2"));
+
+                            if (error || calcError)
+                            {
+                                responseValues.Add("Error", true);
+
+                                if (error)
+                                {
+                                    responseValues.Add("Message", errorMsg);
+                                }
+                                else if (calcError)
+                                {
+                                    responseValues.Add("Message", "province code doesn't match a province or territory");
+                                }
+                            }
 
                             //serialize into JSON, then turn into char array, then into byte array and write to response output stream
                             var jsonResponseObj = Newtonsoft.Json.JsonConvert.SerializeObject(responseValues);
