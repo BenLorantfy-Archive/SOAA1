@@ -46,6 +46,7 @@ namespace giorpTotaller
                         float purchaseAmount = 0;
                         string province = "";
                         string errorMsg = "";
+                        int errorCode = 0;
 
                         if (e.Request.InputStream != null)
                         {
@@ -63,18 +64,21 @@ namespace giorpTotaller
                             {
                                 error = true;
                                 errorMsg += "invalid input for purchaseAmount ";
+                                errorCode += 1;
                             }
 
                             if (purchaseAmount < 0)
                             {
                                 error = true;
                                 errorMsg += "purchaseAmount can't be negative ";
+                                errorCode += 2;
                             }
 
                             if (province.Length != 2)
                             {
                                 error = true;
                                 errorMsg += "province length not equal to 2";
+                                errorCode += 4;
                             }
 
                             //if no errors then call CalculateTotalPurchase to get results into variables
@@ -102,7 +106,9 @@ namespace giorpTotaller
                                 else if (calcError)
                                 {
                                     responseValues.Add("Message", "province code doesn't match a province or territory");
+                                    errorCode += 8;
                                 }
+                                responseValues.Add("Code", errorCode.ToString());
                             }
                             else
                             {
