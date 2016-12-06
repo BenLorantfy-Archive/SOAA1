@@ -7,18 +7,14 @@ import com.google.gson.Gson;
  * @author Ben
  */
 public class ErrorResponse extends Response {
-    public Details error = new Details();
-    
-    public class Details {
-        public String code = "Error";
-        public String message = "Message to send to client describing error";        
-    }
-
+    public Boolean error = true;
+    public String code = "0";
+    public String message = "failed";
     
     public ErrorResponse(String code, String message){
-        super(500);
+        super(200);
         
-        error.code = code;
-        error.message = message;
+        this.code = code;
+        this.message = message;
     }
 }

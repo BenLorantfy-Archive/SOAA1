@@ -110,10 +110,17 @@ public class CarLoanCalculator {
                     // [ Do calculation ]
                     double r = request.InterestRate / 1200;
                     double P = request.PrincipalAmount;
-                    double payment36 = ( r + ( r / ( Math.pow(1 + r,36) - 1 ) )) * P;
-                    double payment48 = ( r + ( r / ( Math.pow(1 + r,48) - 1 ) )) * P;
-                    double payment60 = ( r + ( r / ( Math.pow(1 + r,60) - 1 ) )) * P;
-                    response = new ResultResponse(payment36,payment48,payment60);
+                    
+                    if(P <= 0){
+                        response = new ErrorResponse("1","Principal amount must be positive and nonzero");   
+                    }else if(r <= 0){
+                        response = new ErrorResponse("2","Interest rate must be positive and nonzero");   
+                    }else{
+                        double payment36 = ( r + ( r / ( Math.pow(1 + r,36) - 1 ) )) * P;
+                        double payment48 = ( r + ( r / ( Math.pow(1 + r,48) - 1 ) )) * P;
+                        double payment60 = ( r + ( r / ( Math.pow(1 + r,60) - 1 ) )) * P;
+                        response = new ResultResponse(payment36,payment48,payment60);                        
+                    }
                 }else{
                     response = new ErrorResponse("404","Page Not Found");                  
                 }               
