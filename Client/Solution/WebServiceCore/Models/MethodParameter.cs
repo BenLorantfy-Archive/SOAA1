@@ -39,6 +39,9 @@ namespace WebServiceCore.Models
             {"double", typeof(double)},
             {"bool", typeof(bool)},
             {"boolean", typeof(bool)},
+            {"long", typeof(long)},
+            {"short", typeof(short)},
+            {"char", typeof(char)},
         };
 
         private readonly Regex _ruleRegex;

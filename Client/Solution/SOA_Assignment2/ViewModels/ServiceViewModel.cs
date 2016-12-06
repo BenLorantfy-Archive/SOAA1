@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SOA_Assignment2.Commands;
@@ -54,7 +55,7 @@ namespace SOA_Assignment2.ViewModels
         {
             _teamID = "1189";
             _teamName = "BestTeam";
-            _registryIP = "10.113.21.30";
+            _registryIP = "10.113.21.54";
             _registryPort = "3128";
             _serviceTag = "CAR-LOAN";
 
@@ -265,6 +266,21 @@ namespace SOA_Assignment2.ViewModels
 
             Task.Run(DoRequest);
         }
+
+        /*private async Task DoAsyncQuery()
+        {
+            var task = DoQuery();
+            if (await Task.WhenAny(task, Task.Delay(10)) == task)
+            {
+                return;
+            }
+
+            Logger.Error(new Exception("HL7 request timeout"));
+            _dialogService.ShowMessageBox("HL7 request timeout.");
+
+            IsLoading = false;
+            return;
+        }*/
 
         private Task DoQuery()
         {
