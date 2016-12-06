@@ -33,6 +33,9 @@ namespace WebServiceCore.Utilities
         private const string MANDATORY = "mandatory";
         private const string OPTIONAL = "optional";
 
+        private const string REG_TEAM = "DRC|REG-TEAM|||";
+        private const string INF = "INF|{0}|||";
+
         #endregion
 
         public static string SendRequest(IWebService service)
@@ -40,6 +43,22 @@ namespace WebServiceCore.Utilities
             var message = GenerateServiceMessage(service);
 
             return SendRequest(message, service.IP, service.Port);
+        }
+
+        public static string GenerateTeamRegistry(string teamName, string registryIP, string port)
+        {
+            var message = new StringBuilder();
+
+            message.Append(BOM + REG_TEAM + EOS);
+            message.Append(string.Format(INF, teamName) + EOS + EOM);
+
+            return SendRequest(message.ToString(), registryIP, Convert.ToInt32(port));
+        }
+
+        public static string AnalyzeRegistryResponse(string message, out string error)
+        {
+            error = string.Empty;
+            return null;
         }
 
         private static string SendRequest(string message, string IP, int port)

@@ -236,7 +236,7 @@ function consumeMessage(client,message){
 					response = String.fromCharCode(BOM) + "PUB|NOT-OK|||37|Team doesn't have permissions for the service" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
 					log("Got valdation error from the registry [" + parts + "]");
 					createRegistrySocket(function(){
-						registry.socket.write(response);
+						lastClient.socket.write(response);
 					});
 
 					break;

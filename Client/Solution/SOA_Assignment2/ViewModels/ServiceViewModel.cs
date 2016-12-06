@@ -51,6 +51,13 @@ namespace SOA_Assignment2.ViewModels
         private IEnumerable<IWebService> _services;
         private IEnumerable<ITeam> _teams;
 
+        private enum RequestMode
+        {
+            registry,
+            service,
+            request,
+        }
+
         public ServiceViewModel()
         {
             _teamID = "1189";
@@ -85,6 +92,11 @@ namespace SOA_Assignment2.ViewModels
                 
                 OnPropertyChanged("Teams");
             }
+        }
+
+        public ICommand RegisterCommand
+        {
+            get { return new RelayCommand(RegisterTeam); }
         }
 
         public ICommand RefreshCommand
@@ -251,6 +263,14 @@ namespace SOA_Assignment2.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public void RegisterTeam(object obj)
+        {
+            LoadingMessage = "Requesting";
+            IsLoading = true;
+
+            Task.Run(DoRegistry);
+        }
+
         public void RefreshConfing(object obj)
         {
             LoadingMessage = "Requesting";
@@ -282,34 +302,45 @@ namespace SOA_Assignment2.ViewModels
             return;
         }*/
 
+        private Task DoRegistry()
+        {
+            SendRequest(RequestMode.registry);
+
+            return null;
+        }
+
         private Task DoQuery()
         {
-            SendRequest(true);
+            SendRequest(RequestMode.service);
 
             return null;
         }
 
         private Task DoRequest()
         {
-            SendRequest();
+            SendRequest(RequestMode.request);
 
             return null;
         }
 
-        private void SendRequest(bool query = false)
+        private void SendRequest(RequestMode query)
         {
             string receivedMessage = null;
             ResultList = null;
 
             try
             {
-                if (query)
+                switch (query)
                 {
-                    receivedMessage = HL7Helper.GenerateQueryService(TeamName, TeamID, RegistryIP, RegistryPort, ServiceTag);
-                }
-                else
-                {
-                    receivedMessage = HL7Helper.SendRequest(SelectedService);
+                    case RequestMode.registry:
+                        receivedMessage = HL7Helper.GenerateTeamRegistry(TeamName, RegistryIP, RegistryPort);
+                        break;
+                    case RequestMode.service:
+                        receivedMessage = HL7Helper.GenerateQueryService(TeamName, TeamID, RegistryIP, RegistryPort, ServiceTag);
+                        break;
+                    case RequestMode.request:
+                        receivedMessage = HL7Helper.SendRequest(SelectedService);
+                        break;
                 }
             }
             catch (Exception e)
@@ -328,33 +359,38 @@ namespace SOA_Assignment2.ViewModels
             ResponseHolder serviceResult = null;
             IWebService queryResult = null;
 
-            if (query)
+            switch (query)
             {
-                queryResult = HL7Helper.AnalyzeQueryResponse(receivedMessage, out error);
-            }
-            else
-            {
-                serviceResult = HL7Helper.AnalyzeResponse(receivedMessage, out error);
+                case RequestMode.registry:
+                    break;
+                case RequestMode.service:
+                    queryResult = HL7Helper.AnalyzeQueryResponse(receivedMessage, out error);
+                    break;
+                case RequestMode.request:
+                    serviceResult = HL7Helper.AnalyzeResponse(receivedMessage, out error);
+                    break;
             }
             
             if (!string.IsNullOrWhiteSpace(error))
             {
-                _dialogService.ShowMessageBox(string.Format("Bad respond: {0}", error));
+                _dialogService.ShowMessageBox(string.Format("Bad response: {0}", error));
                 Logger.Error(error, new Exception(receivedMessage));
             }
             else
             {
-                if (query)
+                switch (query)
                 {
-                    Teams = new List<ITeam>()
-                    {
-                        new Team(TeamName, new List<IWebService>() {queryResult})
-                    }
-                ;
-                }
-                else
-                {
-                    ResultList = new List<ResponseHolder>() { serviceResult };
+                    case RequestMode.registry:
+                        break;
+                    case RequestMode.service:
+                        Teams = new List<ITeam>()
+                        {
+                            new Team(TeamName, new List<IWebService>() {queryResult})
+                        };
+                        break;
+                    case RequestMode.request:
+                        ResultList = new List<ResponseHolder>() { serviceResult };
+                        break;
                 }
             }
 
