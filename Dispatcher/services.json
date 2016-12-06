@@ -6,7 +6,7 @@
 	,"port":2014
 	 
 	,"registry":{
-		 "address":"10.113.21.30"
+		 "address":"10.113.21.54"
 		,"port":3128
 	}
 	
@@ -90,7 +90,7 @@
 			]
 		},
 		{
-			 "tagName":"PAY_STUB"
+			 "tagName":"PAYROLL"
 			,"serviceName":"PayStubCalculator"
 			,"securityLevel":1
 			,"description":"Calculates the total pay amount for emplyee."
