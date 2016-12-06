@@ -28,6 +28,8 @@ var EOM = 28;
 // These ASCII values are whitespace according to https://en.wikipedia.org/wiki/Whitespace_character
 var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8232,8233,8239,8287,12288 /* following values are not WSpace=Y according to unicode but similar -> */, 6158,8203,8204,8205,8288,65279];
 
+var lastClient = null;
+var lastSegments = null;
 
 // [ Do all the start up tasks ]
 (function startup(){
@@ -227,8 +229,20 @@ function consumeMessage(client,message){
 					registerService(index + 1);
 				}	
 			}else if (registry.state.indexOf("queringTeam") >= 0){
-				// fjdfjejkhe
-				callService(client, segments)
+				// Check team validation statusCode
+				if (parts[1] == "OK"){
+					log("Got registry uproval on the service");
+				}else{
+					response = String.fromCharCode(BOM) + "PUB|NOT-OK|||37|Team doesn't have permissions for the service" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
+					log("Got valdation error from the registry [" + parts + "]");
+					createRegistrySocket(function(){
+						registry.socket.write(response);
+					});
+
+					break;
+				}
+
+				callService(lastClient, lastSegments)
 			}
 		}
 	}
@@ -260,11 +274,18 @@ function executeService(client,segments){
 		log("Service name empty",1);
 		return;
 	}
+
 	serviceName = srv[2].trim();
+
+	lastClient = client;
+	lastSegments = segments;
 	queryTeam(services.team.name, services.team.id, serviceName);
 }
 
 function callService(client, segments){
+	var srv = segments[1].split("|");
+	var serviceName = srv[2].trim();
+
 	// [ Look for service info ]
 	var service = null;
 	for(var i = 0; i < services.services.length; i++){
