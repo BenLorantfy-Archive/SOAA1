@@ -67,8 +67,9 @@ namespace WebServiceCore.Models
         /// </summary>
         /// <param name="name">The parameter name.</param>
         /// <param name="type">The parameter type.</param>
-        public MethodParameter(string name, string type)
-            : this(name, type, null, null, null)
+        /// <param name="required">Whenever parameter is required or not.</param>
+        public MethodParameter(string name, string type, bool required)
+            : this(name, type, null, null, null, required)
         {
         }
 
@@ -79,7 +80,7 @@ namespace WebServiceCore.Models
         /// <param name="type">The parameter type.</param>
         /// <param name="value">The parameter value.</param>
         public MethodParameter(string name, string type, string value)
-            : this(name, type, value, null, null)
+            : this(name, type, value, null, null, false)
         {
         }
 
@@ -91,13 +92,14 @@ namespace WebServiceCore.Models
         /// <param name="value">The parameter value.</param>
         /// <param name="rule">The parameter validation rule.</param>
         /// <param name="help">The parameter help.</param>
-        public MethodParameter(string name, string type, string value, string rule, string help)
+        public MethodParameter(string name, string type, string value, string rule, string help, bool required)
         {
             Name = name;
-            Type = type;
+            Type = type?.ToLower();
             Value = value;
             Rule = rule;
             Help = help;
+            Required = required;
 
             if (Rule != null &&
                 TYPES.ContainsKey(type.ToLower()) &&
@@ -125,11 +127,20 @@ namespace WebServiceCore.Models
         {
             get
             {
+                if (!Required
+                    && string.IsNullOrWhiteSpace(Value))
+                {
+                    return true;
+                }
+
                 return !string.IsNullOrWhiteSpace(Name) &&
                        !string.IsNullOrWhiteSpace(Type) &&
                        ValidateType();
             }
         }
+
+        /// <inheritdoc />
+        public bool Required { get; }
 
         /// <inheritdoc />
         public string Name { get; }

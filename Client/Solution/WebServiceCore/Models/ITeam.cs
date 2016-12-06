@@ -8,6 +8,10 @@ namespace WebServiceCore.Models
 {
     public interface ITeam
     {
+        int ID { get; }
+        
+        int SecurityLevel { get; }
+
         string Name { get; }
 
         IEnumerable<IWebService> Services { get; }

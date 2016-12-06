@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:SOA_Assignment2.Converters"
         xmlns:models="clr-namespace:WebServiceCore.Models;assembly=WebServiceCore"
         mc:Ignorable="d"
-        Title="SOAP Sender" MinHeight="500" Height="500" MinWidth="425" Width="425">
+        Title="SOAP Sender" MinHeight="600" Height="600" MinWidth="425" Width="425">
     <Window.Resources>
         <converters:EnumerableToCollectionView x:Key="IEnumToCollection" />
         <converters:ReverseBooleanToVisibility x:Key="ReverseBooleanToVisibility" />
@@ -21,9 +21,35 @@
         </Grid.RowDefinitions>
         <StackPanel Margin="10" Grid.IsSharedSizeScope="True">
             <StackPanel Visibility="{Binding Path=IsLoading, Converter={StaticResource ReverseBooleanToVisibility}}">
+                <Grid HorizontalAlignment="Center" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Team Name"></TextBlock>
+                    <TextBlock Grid.Row="1" Text="Team ID"></TextBlock>
+                    <TextBlock Grid.Row="2" Text="Registry IP"></TextBlock>
+                    <TextBlock Grid.Row="3" Text="Registry Port"></TextBlock>
+                    <TextBlock Grid.Row="4" Text="Service Tag"></TextBlock>
+                    
+                    <TextBox Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" Text="{Binding TeamName}"></TextBox>
+                    <TextBox Grid.Column="1" MinWidth="100" Grid.Row="1" HorizontalAlignment="Center" Text="{Binding TeamID}"></TextBox>
+                    <TextBox Grid.Column="1" MinWidth="100" Grid.Row="2" HorizontalAlignment="Center" Text="{Binding RegistryIP}"></TextBox>
+                    <TextBox Grid.Column="1" MinWidth="100" Grid.Row="3" HorizontalAlignment="Center" Text="{Binding RegistryPort}"></TextBox>
+                    <TextBox Grid.Column="1" MinWidth="100" Grid.Row="4" HorizontalAlignment="Center" Text="{Binding ServiceTag}"></TextBox>
+                </Grid>
+
                 <Button Command="{Binding RefreshCommand}" IsEnabled="{Binding RefreshEnabled}" 
                         Width="Auto" Padding="5 5 5 5" Margin="0,0,0,10"
-                        HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Content="Reload Config" FontFamily="OCR A Std"/>
+                        HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Content="Query Service" FontFamily="Lato"/>
 
                 <ComboBox ItemsSource="{Binding Path=Teams, Converter={StaticResource IEnumToCollection}}"
                           DisplayMemberPath="Name"
@@ -79,9 +105,11 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Button Command="{Binding Path=SendCommand}" IsEnabled="{Binding Path=CanSend}" 
+                    <Button Command="{Binding SendCommand}" IsEnabled="{Binding CanSend}" 
                                 Padding="5 5 5 5" Margin="0,10,0,5"
-                                FontFamily="OCR A Std" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center">Send Request</Button>
+                                FontFamily="Lato" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="TextBlock"/>
+                    </Button>
                 </StackPanel>
             </StackPanel>
 

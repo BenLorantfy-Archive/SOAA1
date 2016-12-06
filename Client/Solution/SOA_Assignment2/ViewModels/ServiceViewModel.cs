@@ -34,6 +34,12 @@ namespace SOA_Assignment2.ViewModels
         private bool _displayParameters;
         private bool _loading;
 
+        private string _teamName;
+        private string _teamID;
+        private string _registryIP;
+        private string _registryPort;
+        private string _serviceTag;
+
         private string _loadingMessage;
         private IEnumerable<ResponseHolder> _resultList;
         private IWebMethod _selectedMethod;
@@ -46,31 +52,22 @@ namespace SOA_Assignment2.ViewModels
 
         public ServiceViewModel()
         {
+            _teamID = "1189";
+            _teamName = "BestTeam";
+            _registryIP = "10.113.21.30";
+            _registryPort = "3128";
+            _serviceTag = "CAR-LOAN";
+
             _dialogService = new DialogService();
             _services = new List<IWebService>();
-            _teams = new List<ITeam>()
-            {
-                new Team("BestTeam",
-                         new List<IWebService>()
-                         {
-                             new WebService("192.168.238.1",
-                                            2016,
-                                            "PayStubCalculator",
-                                            new List<IMethodParameter>()
-                                            {
-                                                new MethodParameter("type", "int", "1"),
-                                                new MethodParameter("hours", "string", "40"),
-                                                new MethodParameter("rate", "float", "14.5"),
-                                            })
-        })
-            };
+            _teams = new List<ITeam>();
             RefreshEnabled = true;
 
             _loading = false;
             _displayParameters = false;
             _loadingMessage = "Loading...";
 
-            RefreshConfing(null);
+            // RefreshConfing(null);
         }
 
         public IEnumerable<IWebService> Services
@@ -81,6 +78,12 @@ namespace SOA_Assignment2.ViewModels
         public IEnumerable<ITeam> Teams
         {
             get { return _teams; }
+            set
+            {
+                _teams = value;
+                
+                OnPropertyChanged("Teams");
+            }
         }
 
         public ICommand RefreshCommand
@@ -190,26 +193,69 @@ namespace SOA_Assignment2.ViewModels
             }
         }
 
+        public string TeamName
+        {
+            get { return _teamName; }
+            set
+            {
+                _teamName = value;
+                
+                OnPropertyChanged("TeamName");
+            }
+        }
+
+        public string TeamID
+        {
+            get { return _teamID; }
+            set
+            {
+                _teamID = value;
+
+                OnPropertyChanged("TeamID");
+            }
+        }
+
+        public string RegistryIP
+        {
+            get { return _registryIP; }
+            set
+            {
+                _registryIP = value;
+
+                OnPropertyChanged("RegistryIP");
+            }
+        }
+
+        public string RegistryPort
+        {
+            get { return _registryPort; }
+            set
+            {
+                _registryPort = value;
+
+                OnPropertyChanged("RegistryPort");
+            }
+        }
+
+        public string ServiceTag
+        {
+            get { return _serviceTag; }
+            set
+            {
+                _serviceTag = value;
+
+                OnPropertyChanged("ServiceTag");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void RefreshConfing(object obj)
         {
-            /*RefreshEnabled = false;
-            OnPropertyChanged("RefreshEnabled");
+            LoadingMessage = "Requesting";
+            IsLoading = true;
 
-            try
-            {
-                _services = XmlHelper.ReadConfig("config.xml");
-                OnPropertyChanged("Services");
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Failed to read config file", e);
-                _dialogService.ShowMessageBox("Failed to read config file");
-            }
-
-            RefreshEnabled = true;
-            OnPropertyChanged("RefreshEnabled");*/
+            Task.Run(DoQuery);
         }
 
         public void SendRequest(object obj)
@@ -220,50 +266,84 @@ namespace SOA_Assignment2.ViewModels
             Task.Run(DoRequest);
         }
 
+        private Task DoQuery()
+        {
+            SendRequest(true);
+
+            return null;
+        }
+
         private Task DoRequest()
+        {
+            SendRequest();
+
+            return null;
+        }
+
+        private void SendRequest(bool query = false)
         {
             string receivedMessage = null;
             ResultList = null;
 
             try
             {
-                receivedMessage = HL7Helper.SendRequest(SelectedService);
+                if (query)
+                {
+                    receivedMessage = HL7Helper.GenerateQueryService(TeamName, TeamID, RegistryIP, RegistryPort, ServiceTag);
+                }
+                else
+                {
+                    receivedMessage = HL7Helper.SendRequest(SelectedService);
+                }
             }
             catch (Exception e)
             {
-                Logger.Error("Failed to send HTTP request", e);
-                _dialogService.ShowMessageBox("Failed to send HTTP request.");
+                Logger.Error("Failed to send HL7 request", e);
+                _dialogService.ShowMessageBox("Failed to send HL7 request.");
 
                 IsLoading = false;
-                return null;
+                return;
             }
 
             LoadingMessage = "Analyzing";
-            string example = "PUB|OK|||1|RSP|1|TotalPayValue|float|580.00|";
 
-            string validation = string.Empty;
-            if (!HttpHelper.ValidateHeader(receivedMessage, out validation))
+            string error = string.Empty;
+
+            ResponseHolder serviceResult = null;
+            IWebService queryResult = null;
+
+            if (query)
             {
-                _dialogService.ShowMessageBox(string.Format("Bad respond: {0}", validation));
-                Logger.Error(validation, new Exception(receivedMessage));
+                queryResult = HL7Helper.AnalyzeQueryResponse(receivedMessage, out error);
             }
             else
             {
-                try
+                serviceResult = HL7Helper.AnalyzeResponse(receivedMessage, out error);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(error))
+            {
+                _dialogService.ShowMessageBox(string.Format("Bad respond: {0}", error));
+                Logger.Error(error, new Exception(receivedMessage));
+            }
+            else
+            {
+                if (query)
                 {
-                    var soap = HttpHelper.ExtractSOAP(receivedMessage);
-
-                    ResultList = XmlHelper.ConvertSoapXml(soap);
+                    Teams = new List<ITeam>()
+                    {
+                        new Team(TeamName, new List<IWebService>() {queryResult})
+                    }
+                ;
                 }
-                catch (Exception e)
+                else
                 {
-                    Logger.Error("Soap unwrap error", e);
-                    _dialogService.ShowMessageBox("Couldn't analyze response.");
+                    ResultList = new List<ResponseHolder>() { serviceResult };
                 }
             }
 
             IsLoading = false;
-            return null;
+            return;
         }
 
         public void UpdateCanSend()

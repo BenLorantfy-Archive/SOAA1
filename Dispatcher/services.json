@@ -6,7 +6,7 @@
 	,"port":2016
 	 
 	,"registry":{
-		 "address":"127.0.0.1"
+		 "address":"10.113.21.30"
 		,"port":3128
 	}
 	

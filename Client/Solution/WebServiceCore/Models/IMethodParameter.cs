@@ -31,6 +31,14 @@ namespace WebServiceCore.Models
         bool IsValid { get; }
 
         /// <summary>
+        /// Returns true if parameter is mandatory.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if required; otherwise, <c>false</c>.
+        /// </value>
+        bool Required { get; }
+
+        /// <summary>
         /// Gets the parameter name.
         /// </summary>
         string Name { get; }

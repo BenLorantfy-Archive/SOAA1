@@ -34,5 +34,17 @@ namespace Tests.UnitTests
 
             Assert.Equal(test, "");
         }
+
+        [Fact]
+        public void Message_Parse_Success_1()
+        {
+            var error = string.Empty;
+            var test = HL7Helper.AnalyzeResponse(@"PUB|OK|||1|
+RSP | 1 | TotalPayValue | float | 580.00 |
+
+".Replace("\r\n", "\r"), out error);
+
+            Assert.Equal(test.Name, "");
+        }
     }
 }

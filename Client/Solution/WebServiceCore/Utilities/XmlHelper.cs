@@ -228,7 +228,7 @@ namespace WebServiceCore.Utilities
                 var rule = GetAttribute(parameterNode, "rule");
                 var help = GetAttribute(parameterNode, "help");
 
-                parameters.Add(new MethodParameter(name, type, value, rule, help));
+                parameters.Add(new MethodParameter(name, type, value, rule, help, false));
             }
 
             return parameters;

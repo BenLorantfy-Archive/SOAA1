@@ -12,7 +12,15 @@ namespace WebServiceCore.Models
         {
             Name = name;
             Services = services;
+            ID = 0;
+            SecurityLevel = 1;
         }
+
+        /// <inheritdoc />
+        public int ID { get; }
+
+        /// <inheritdoc />
+        public int SecurityLevel { get; }
 
         /// <inheritdoc />
         public string Name { get; }
