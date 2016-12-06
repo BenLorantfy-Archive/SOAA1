@@ -130,6 +130,37 @@
 					,"type":"float"
 				}
 			]
+		},
+		{
+			 "tagName":"POSTAL"
+			,"serviceName":"checkPostalCode"
+			,"securityLevel":1
+			,"description":"Validates a Canadian postal code based on the region specified"
+			,"path":"/checkPostalCode"
+            ,"port":1337
+            ,"start":"./Services/checkPostalCheck/Debug/checkPostalCheck.exe"
+			,"arguments":[
+				{
+					  "name":"postalcode"
+					 ,"mandatory":true
+					 ,"type":"string"
+				},
+				{
+					  "name":"province"
+					 ,"mandatory":true
+					 ,"type":"string"
+				}
+			]
+			,"returns":[
+				{
+					 "name":"isValid"
+					,"type":"int"
+				},
+				{
+					 "name":"specialNotes"
+					,"type":"string"
+				}
+			]
 		}
 	]
 }
