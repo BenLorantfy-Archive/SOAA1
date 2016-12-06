@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#define BUF_SIZE 64
+#define BUF_SIZE 512
 #define NULL_STR "null\0"
 
 int index_of(char* string, int string_len, char symbol, int start);
@@ -151,19 +151,19 @@ const char* process_message(char* message, int message_len)
 		switch (error)
 		{
 		case 1:
-			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Incorrect employee type");
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%s\"}\0", error, "Incorrect employee type");
 			break;
 		case 2:
-			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Hours cannot be negative or zero");
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%s\"}\0", error, "Hours cannot be negative or zero");
 			break;
 		case 3:
-			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Rate cannot be negative");
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%s\"}\0", error, "Rate cannot be negative");
 			break;
 		case 4:
-			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Piece count cannot be negative");
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%s\"}\0", error, "Piece count cannot be negative");
 			break;
 		case 5:
-			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Contract duration cannot be negative");
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%s\"}\0", error, "Contract duration cannot be negative");
 			break;
 		default:
 			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, result);

@@ -25,7 +25,7 @@ const char* http_fail(char* body, int length)
 {
 	char buffer[BUFFER_SIZE];
 
-	sprintf_s(buffer, BUFFER_SIZE, "%s%.*s\0", HTTP_500, length, body);
+	sprintf_s(buffer, BUFFER_SIZE, "%s%.*s\0", HTTP_200, length, body);
 	return buffer;
 }
 

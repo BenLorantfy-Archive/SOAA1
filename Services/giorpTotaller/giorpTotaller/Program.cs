@@ -46,6 +46,7 @@ namespace giorpTotaller
                         float purchaseAmount = 0;
                         string province = "";
                         string errorMsg = "";
+                        int errorCode = 0;
 
                         if (e.Request.InputStream != null)
                         {
@@ -63,18 +64,21 @@ namespace giorpTotaller
                             {
                                 error = true;
                                 errorMsg += "invalid input for purchaseAmount ";
+                                errorCode += 1;
                             }
 
                             if (purchaseAmount < 0)
                             {
                                 error = true;
                                 errorMsg += "purchaseAmount can't be negative ";
+                                errorCode += 2;
                             }
 
                             if (province.Length != 2)
                             {
                                 error = true;
                                 errorMsg += "province length not equal to 2";
+                                errorCode += 4;
                             }
 
                             //if no errors then call CalculateTotalPurchase to get results into variables
@@ -102,7 +106,13 @@ namespace giorpTotaller
                                 else if (calcError)
                                 {
                                     responseValues.Add("Message", "province code doesn't match a province or territory");
+                                    errorCode += 8;
                                 }
+                                responseValues.Add("Code", errorCode.ToString());
+                            }
+                            else
+                            {
+                                responseValues.Add("Error", false);
                             }
 
                             //serialize into JSON, then turn into char array, then into byte array and write to response output stream
@@ -137,7 +147,7 @@ namespace giorpTotaller
         /// <returns></returns>
         private static bool CalculateTotalPurchase(float purchaseAmount, string province, out float subTotal, out float Gst, out float Pst, out float Hst, out float grandTotal)
         {
-            bool retValue = true; //bool for error check
+            bool retValueError = false; //bool for error check
 
             subTotal = purchaseAmount;
             Gst = Pst = Hst = 0;
@@ -210,14 +220,14 @@ namespace giorpTotaller
                     Hst = 0;
                     break;
                 default:
-                    retValue = false;
+                    retValueError = true;
                     subTotal = 0;
                     break;
             }
 
             grandTotal = subTotal + Gst + Pst + Hst;
 
-            return retValue;
+            return retValueError;
         }
         
     }
