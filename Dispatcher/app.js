@@ -331,9 +331,11 @@ function executeService(client,segments){
 			
 			
 			if(data.error || data.Error || data.ERROR){
+				//console.log("DATA:",data);
 				for(var key in data){
 					data[key.toLowerCase()] = data[key];
 				}
+				//console.log("DATA2:", data);
 				
 				if(!data.code){
 					data.code = 0;
