@@ -43,10 +43,15 @@ float CalculatePayroll(Employee employee, unsigned int * error)
 {
 	*error = FALSE_L;
 
-	if (employee.hours < 0
-		|| employee.rate < 0)
+	if (employee.hours < 0)
 	{
-		*error = TRUE_L;
+		*error = 2;
+		return -1;
+	}
+
+	if (employee.rate < 0)
+	{
+		*error = 3;
 		return -1;
 	}
 
@@ -71,7 +76,7 @@ float CalculatePayroll(Employee employee, unsigned int * error)
 			pay = employee.rate / WEEKS_PER_YEAR;
 			break;
 		default:
-			*error = TRUE_L;
+			*error = 1;
 			return -2;
 	}
 

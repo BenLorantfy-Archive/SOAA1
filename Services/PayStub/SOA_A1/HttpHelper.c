@@ -5,8 +5,8 @@
 
 #include<Windows.h>
 
-#define HTTP_200 "HTTP/1.1 200 OK\n\r\n"
-#define HTTP_500 "HTTP/1.1 500 Internal Server Error\n\rContent - Length : 0\n\rConnection : Closed"
+#define HTTP_200 "HTTP/1.1 200 OK\n\r\n\r"
+#define HTTP_500 "HTTP/1.1 500 Internal Server Error\n\r\n\r"
 #define CONNECTION_CLOSED "Connection : Closed"
 
 #define BUFFER_SIZE 512
@@ -21,9 +21,12 @@ const char* http_success(char* body, int length)
 	return buffer;
 }
 
-const char* http_fail()
+const char* http_fail(char* body, int length)
 {
-	return HTTP_500;
+	char buffer[BUFFER_SIZE];
+
+	sprintf_s(buffer, BUFFER_SIZE, "%s%.*s\0", HTTP_500, length, body);
+	return buffer;
 }
 
 #endif // !_HTTP_HELPER_C_

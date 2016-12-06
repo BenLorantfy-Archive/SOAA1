@@ -16,10 +16,15 @@ float CalculateContractPayroll(ContractEmployee employee, unsigned int * error)
 {
 	*error = FALSE_L;
 
-	if (employee.contractDuration <= 0
-		|| employee.employee.rate < 0)
+	if (employee.employee.rate < 0)
 	{
-		*error = TRUE_L;
+		*error = 3;
+		return -1;
+	}
+
+	if (employee.contractDuration <= 0)
+	{
+		*error = 5;
 		return -1;
 	}
 

@@ -18,11 +18,21 @@ float CalculateSeasonalPayroll(SeasonalEmployee employee, unsigned int * error)
 {
 	*error = FALSE_L;
 
-	if (employee.employee.hours <= 0
-		|| employee.piecesMade < 0
-		|| employee.employee.rate < 0)
+	if (employee.employee.hours < 0)
 	{
-		*error = TRUE_L;
+		*error = 2;
+		return -1;
+	}
+
+	if (employee.employee.rate < 0)
+	{
+		*error = 3;
+		return -1;
+	}
+
+	if (employee.piecesMade < 0)
+	{
+		*error = 4;
 		return -1;
 	}
 

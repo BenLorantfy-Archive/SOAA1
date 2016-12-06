@@ -146,9 +146,31 @@ const char* process_message(char* message, int message_len)
 		break;
 	}
 
-	if (error == TRUE_L)
+	if (error > 0)
 	{
-		return http_fail();
+		switch (error)
+		{
+		case 1:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Incorrect employee type");
+			break;
+		case 2:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Hours cannot be negative or zero");
+			break;
+		case 3:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Rate cannot be negative");
+			break;
+		case 4:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Piece count cannot be negative");
+			break;
+		case 5:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, "Contract duration cannot be negative");
+			break;
+		default:
+			sprintf_s(buffer, BUF_SIZE, "{\"error\":\"true\",\"code\":\"%d\",\"message\":\"%.2f\"}\0", error, result);
+			break;
+		}
+
+		return http_fail(buffer, strlen(buffer));
 	}
 
 	sprintf_s(buffer, BUF_SIZE, "{\"TotalPayValue\":\"%.2f\"}\0", result);
