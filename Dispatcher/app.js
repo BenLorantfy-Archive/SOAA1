@@ -44,8 +44,8 @@ var whitespace = [9,10,11,12,13,32 /* <- space */, 133,160,5760,8192,8193,8194,8
 						log("Failed to start " + service.name + " service: " + error);
 						return;
 					  }
-					  console.log("stdout: " + stdout);
-					  console.log("stderr: " + stderr);
+					  //console.log("stdout: " + stdout);
+					  //console.log("stderr: " + stderr);
 					}); 					
 				})(service);
 				
@@ -174,9 +174,9 @@ function consumeMessage(client,message){
 	// [ Gets all the message segments ]
 	var segments = message.split(String.fromCharCode(EOS));
 	
-	console.log("::::Message Segments::::");
-	console.log(segments);
-	console.log("::::End Message Segments::::");
+	//console.log("::::Message Segments::::");
+	//console.log(segments);
+	//console.log("::::End Message Segments::::");
 	
 	// [ Remove all the empty segments ]
 	for(var i = segments.length - 1; i >= 0; i--){
@@ -249,15 +249,15 @@ function executeService(client,segments){
 	
 	// [ Get service name ]
 	var serviceName = null;
-	if(typeof srv[1] !== "string" ){
+	if(typeof srv[2] !== "string" ){
 		log("Service name invalid",1);
 		return;
 	}
-	if(srv[1].trim() == ""){
+	if(srv[2].trim() == ""){
 		log("Service name empty",1);
 		return;
 	}
-	serviceName = srv[1].trim();
+	serviceName = srv[2].trim();
 	
 	// [ Look for service info ]
 	var service = null;
@@ -314,9 +314,9 @@ function executeService(client,segments){
     request(options, function (error, res, data) {
     	// [ Make sure request didn't fail ]
     	if(error || res.statusCode != 200 || !data){
-			log("Error: Request to POST " + url + " failed",1);
+			log("Error: Request to POST " + url + " failed: " + error,1);
 			
-			response = String.fromCharCode(BOM) + "PUB|NOT-OK|||42|Service Failed" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
+			response = String.fromCharCode(BOM) + "PUB|NOT-OK|||42|Service isn't started" + String.fromCharCode(EOS) + String.fromCharCode(EOM) + "\n";
     	}
 
     	if(!response){
@@ -327,16 +327,31 @@ function executeService(client,segments){
 					console.log("Weird: " + e);
 				}
 			}
+			
+			
+			
+			if(data.error || data.Error || data.ERROR){
+				for(var key in data){
+					data[key.toLowerCase()] = data[key];
+				}
+				
+				if(!data.code){
+					data.code = 0;
+				}
+				response = String.fromCharCode(BOM) + "PUB|NOT-OK|" + data.code + "|" + data.message + "||" + String.fromCharCode(EOS);
+			}else{
+				// [ Start response ]
+				response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
 
-	    	// [ Start response ]
-	    	response = String.fromCharCode(BOM) + "PUB|OK|||" + service.returns.length + "|" + String.fromCharCode(EOS);
+				// [ Loop through each return value ]
+				for(var i = 0; i < service.returns.length; i++){
+					var ret = service.returns[i];
+					var value = data[service.returns[i].name];
+					response += "RSP|" + (i + 1) + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
+				}				
+			}
 
-	    	// [ Loop through each return value ]
-	    	for(var i = 0; i < service.returns.length; i++){
-	    		var ret = service.returns[i];
-	    		var value = data[service.returns[i].name];
-	    		response += "RSP|" + (i + 1) + "|" + ret.name + "|" + ret.type + "|" + value + "|" + String.fromCharCode(EOS);
-	    	}
+
 
 	    	response += String.fromCharCode(EOM);
 	    	response += "\n"; // This is only suggested in the spec, but the sample client doesn't work without it
@@ -344,6 +359,7 @@ function executeService(client,segments){
 
     	// [ Send the response ]
     	log("Sending response to client...", 1);
+		console.log(response);
     	client.socket.write(response,function(){
     		log("Response sent", 1);
     	});
