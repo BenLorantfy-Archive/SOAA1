@@ -104,6 +104,10 @@ namespace giorpTotaller
                                     responseValues.Add("Message", "province code doesn't match a province or territory");
                                 }
                             }
+                            else
+                            {
+                                responseValues.Add("Error", false);
+                            }
 
                             //serialize into JSON, then turn into char array, then into byte array and write to response output stream
                             var jsonResponseObj = Newtonsoft.Json.JsonConvert.SerializeObject(responseValues);
@@ -137,7 +141,7 @@ namespace giorpTotaller
         /// <returns></returns>
         private static bool CalculateTotalPurchase(float purchaseAmount, string province, out float subTotal, out float Gst, out float Pst, out float Hst, out float grandTotal)
         {
-            bool retValue = true; //bool for error check
+            bool retValueError = false; //bool for error check
 
             subTotal = purchaseAmount;
             Gst = Pst = Hst = 0;
@@ -210,14 +214,14 @@ namespace giorpTotaller
                     Hst = 0;
                     break;
                 default:
-                    retValue = false;
+                    retValueError = true;
                     subTotal = 0;
                     break;
             }
 
             grandTotal = subTotal + Gst + Pst + Hst;
 
-            return retValue;
+            return retValueError;
         }
         
     }
